@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+	
+	<h1>Page not found</h1>
+	
+	<section id="create">
+		
+		<form method="post" action="#/">
+			<p>You can now choose to create a new content or a context</p>
+			<input type="hidden" name="step" id="step" value="1">
+			<select name="page_type" id="page_type">
+				<option value="content">Create a content page</option>
+				<option value="context">Create a context page</option>
+			</select> <input type="submit" name="bsubmit" value="Continue">
+		</form>
+	</section>
+{% endblock %}
+
+{% block extrascripts %}
+	<script type="text/javascript"                                src="/static/js/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="/static/js/ckeditor/adapters/jquery.js"></script>
+	<script type="text/javascript" src="/static/js/goldorak.page.js"></script>
+	<script>
+		new $.goldorak.createPage();
+	</script>
+{% endblock %}

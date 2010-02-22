@@ -1,0 +1,7 @@
+include INSTALLING.md
+include LICENSE
+include NOTICE
+include README.rst
+recursive-include compono/_design *
+recursive-include compono/media *
+recursive-include compono/templates *

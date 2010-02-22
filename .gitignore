@@ -1,0 +1,9 @@
+.DS_Store
+*.pyc
+*.db
+*.swp
+*.pyo
+.installed.cfg
+compono.egg-info
+dist
+build
