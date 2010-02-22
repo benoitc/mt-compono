@@ -18,7 +18,6 @@ Installation
 Build Apache CouchDB
 ++++++++++++++++++++
 
-
 Here we build Apache CouchDB in development mode. We use the trunk version 
 waiting 0.11 is released::
 
@@ -44,8 +43,8 @@ Install from sources::
   $ git clone git@github.com:benoitc/compono
   $ python setup.py install
 
-Configure Django
-----------------
+Configure your Django Project
+-----------------------------
 
 Here we will show what to edit in your settings file. First you need to add
 `compono` and `couchdbkit` to your lists of applications::
