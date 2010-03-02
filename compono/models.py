@@ -10,6 +10,7 @@ DateTimeProperty, StringListProperty
 class Page(Document):
     title = StringProperty()
     page_type = StringProperty(default="page")
+    ctype = StringProperty()
     urls = StringListProperty()
     created = DateTimeProperty()
     updated = DateTimeProperty(default=datetime.utcnow)
@@ -22,12 +23,27 @@ class Page(Document):
         super(Page, document).save(**params)
     
     @classmethod    
-    def from_path(self, path):
+    def from_path(cls, path):
         key = path.split('/')
-        res = self.view("pages/from_path", key=key, include_doc=True).first()
-        if not res:
-            return None
-        return res['value']
+        res = cls.view("compono/from_path", key=key, include_doc=True).first()
+        return res
+        
+    @classmethod
+    def by_type(cls, tname):
+        return cls.view("compono/page_by_ctype", key=tname, 
+                    include_doc=True).first()
         
 
+class Type(Document):
+    title = StringProperty()
+    description = StringProperty()
+    
+    doc_type = "ctype"
+    
+    @classmethod
+    def all(cls):
+        return cls.view('compono/all_types', include_doc=True)
         
+    @classmethod
+    def by_name(self, tname):
+        return cls.view('compono/ctype_by_name', include_doc=True).first()
