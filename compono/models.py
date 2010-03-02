@@ -10,6 +10,7 @@ DateTimeProperty, StringListProperty
 class Page(Document):
     title = StringProperty()
     page_type = StringProperty(default="page")
+    groups = StringListProperty()
     ctype = StringProperty()
     urls = StringListProperty()
     created = DateTimeProperty()
