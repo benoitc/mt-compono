@@ -6,6 +6,7 @@
 
 from couchdbkit.ext.django import loading
 from django.conf import settings
+from django.contrib.auth.models import Group
 from django.http import Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
@@ -44,8 +45,11 @@ def page_handler(request, path=None):
     return show_page(request, page)
     
 def create_page(request):
+    groups = Group.objects.all()
+    
     return render_to_response("pages/create_page.html", {
-        "path": request.path
+        "path": request.path,
+        'groups': Group.objects.all()
     }, context_instance=RequestContext(request))
     
 def show_page(request, page):

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>{% block title %}{% endblock %}</title>
+    <!--[if IE]>
+
+    <script>
+        // allow IE to recognize HTMl5 elements
+        document.createElement('section');
+        document.createElement('article');
+        document.createElement('aside');
+        document.createElement('footer');
+        document.createElement('header');
+        document.createElement('nav');
+        document.createElement('time');
+
+    </script>
+    <![endif]-->
+
+    {% load componomedia %}
+    <link rel="stylesheet" href="{{ compono_media_url }}/css/compono.css" type="text/css" media="screen, projection" />
+</head>
+
+<body>
+  
+  {% block compono_content %}
+    
+  {% endblock %}
+  
+  {% block extrascripts %}
+    
+  {% endblock %}
+</body>
+</html>

@@ -1,9 +1,10 @@
-{% extends "base.html" %}
+{% extends "compono/base.html" %}
+{% load i18n %}
+{% load componomedia %}
 
 {% block content %}
-	
-	<h1>Page not found</h1>
-	
+
+  <h1>Create a new context or new page</h1>
 	<section id="create">
 		
 		<form method="post" action="#/">
@@ -12,15 +13,24 @@
 			<select name="page_type" id="page_type">
 				<option value="content">Create a content page</option>
 				<option value="context">Create a context page</option>
-			</select> <input type="submit" name="bsubmit" value="Continue">
+			</select> 
+			<fieldset>
+			  <legend>Associate groups of editors to this page</legend>
+			  <select name="editors" size="6" multiple="multiple">
+  			  {% for g in groups %}
+  			    <option value="{{ g.name }}">{{ g.name}}</options>
+  			  {% endfor %}
+  			</select>
+			</fieldset>
+			<input type="submit" name="bsubmit" value="Continue">
 		</form>
 	</section>
 {% endblock %}
 
 {% block extrascripts %}
-	<script type="text/javascript"                                src="/static/js/ckeditor/ckeditor.js"></script>
-	<script type="text/javascript" src="/static/js/ckeditor/adapters/jquery.js"></script>
-	<script type="text/javascript" src="/static/js/goldorak.page.js"></script>
+	<script type="text/javascript"                              src="{% compono_media_url %}/js/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="{% compono_media_url %}/js/ckeditor/adapters/jquery.js"></script>
+	<script type="text/javascript" src="{% compono_media_url %}/js/goldorak.page.js"></script>
 	<script>
 		new $.goldorak.createPage();
 	</script>
