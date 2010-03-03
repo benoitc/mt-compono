@@ -21,12 +21,10 @@
       <div id="cedit">
           {% csrf_token %}
           {{ f.page_id }}
-          <fieldset id="main" class="">
-            <legend>Main</legend>
+            <h2>Edit page</h2>
             <p><label for="id_title"> {{ f.title.label }}</label>{{ f.title }}</p>
             <label for="id_body">{{ f.body.label }}</label><br>
             {{ f.body }}
-          </fieldset>
 
           <fieldset id="custom_fields" class="">
             <legend>Custom fields</legend>
