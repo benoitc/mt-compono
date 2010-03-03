@@ -2,5 +2,16 @@
 
 
 {% block content %}
-  edit
+  <form action=".?edit=1" method="post" accept-charset="utf-8">
+    {% csrf_token %}
+    {{ f.page_id }}
+    <fieldset id="main" class="">
+      <legend>Main</legend>
+      <p><label for="id_title">Title: {{ f.title }}</label> {{ f.title }}</p>
+      <label for="id_abstract">Description</label><br>
+      {{ f.description }}
+    </fieldset>
+
+    <p><input type="submit" value="Continue &rarr;"></p>
+  </form>
 {% endblock %}

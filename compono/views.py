@@ -11,7 +11,7 @@ from django.template import RequestContext, loader, Context
 from django.core.urlresolvers import reverse
 
 
-from compono.forms import CreatePage
+from compono.forms import CreatePage, EditPage
 from compono.models import Page, Type
 from compono.permissions import can_create, can_edit
 
@@ -79,7 +79,10 @@ def create_page(request, path):
     }, context_instance=RequestContext(request))
     
 def edit_page(request, page):
+    fedit = EditPage(initial={"page_id": page._id})
+    
     return render_to_response("pages/edit_page.html", {
+        "f": fedit
     }, context_instance=RequestContext(request))
 
 def show_page(request, page):

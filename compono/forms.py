@@ -15,10 +15,17 @@ class CreatePage(forms.Form):
                     ('page', 'Create a page'),
                     ('context', 'Create a context page')
                 ))
-    editors = forms.MultipleChoiceField(widget=forms.SelectMultiple(attrs={'size': 6}))
+    editors = forms.MultipleChoiceField(widget=forms.SelectMultiple(
+                                                        attrs={'size': 6}))
     
     def __init__(self, *args, **kwargs):
         super(CreatePage, self).__init__(*args, **kwargs)
         self.fields['editors'].choices =  [(g.name, g.name) \
                                                 for g in Group.objects.all()]
-    
+                                                
+                                                
+class EditPage(forms.Form):
+    page_id = forms.CharField(widget=forms.HiddenInput)
+    title = forms.CharField()
+    description = forms.CharField(widget=forms.Textarea(
+                                                attrs={'cols':80, 'rows':5}))
