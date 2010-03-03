@@ -20,6 +20,6 @@ def compono_media_url():
     
     COMPONO_MEDIA_URL = getattr(settings, 'COMPONO_MEDIA_URL', 
                             '/media/compono')
-    print COMPONO_MEDIA_URL                       
+                                                  
     return iri_to_uri(COMPONO_MEDIA_URL)
 compono_media_url = register.simple_tag(compono_media_url)

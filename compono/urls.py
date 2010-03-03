@@ -7,21 +7,30 @@ import os
 from django.conf import settings
 from django.conf.urls.defaults import patterns, url
 
+from compono.views import page_types, page_type, page_by_type, page_handler
+
 COMPONO_MEDIA_ROOT = getattr(settings, 'COMPONO_MEDIA_ROOT', 
                         os.path.join(os.path.dirname(__file__), 'media'))
-COMPONO_MEDIA_URL = getattr(settings, 'COMPONO_MEDIA_URL', '/media/compono')
+COMPONO_MEDIA_URL = getattr(settings, 'COMPONO_MEDIA_URL', 
+                        'media/compono')
 
-print COMPONO_MEDIA_URL
+
+if COMPONO_MEDIA_URL.startswith('/'):
+    COMPONO_MEDIA_URL = COMPONO_MEDIA_URL[1:]
+
 print COMPONO_MEDIA_ROOT
-
-urlpatterns = patterns('compono.views',
-    url(r'^types', 'types', name='types'),
-    url(r'^type/(?P<name>.*)$', 'type', name='types'),
-    url(r'^type/(?P<name>.*)/pages$', 'page_by_types', name='page_by_types'),
-    url(r'^%s/(?P<path>.*)$' % COMPONO_MEDIA_URL, 'django.views.static.serve', 
-            {'document_root': COMPONO_MEDIA_ROOT}),
-)
+if settings.APPEND_SLASH:
     
-urlpatterns += patterns('compono.views',
-    url(r'^(?P<path>.*)$', 'page_handler', name='page_handler'),
+    
+    r = url(r'^(?P<path>.*)/$', page_handler, name='page_handler')
+else:
+    r = url(r'^(?P<path>.*)$', page_handler, name='page_handler')
+
+urlpatterns = patterns('',
+    url(r'^types', page_types, name='page_types'),
+    url(r'^type/(?P<name>.*)$', page_type, name='page_types'),
+    url(r'^type/(?P<name>.*)/pages$', page_by_type, name='page_by_types'),
+    (r'^%s/(?P<path>.*)$' % COMPONO_MEDIA_URL, 'django.views.static.serve', 
+              {'document_root': COMPONO_MEDIA_ROOT}),
+    r,
 )

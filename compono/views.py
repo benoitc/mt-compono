@@ -15,22 +15,22 @@ from django.template import RequestContext, loader, Context
 from compono.models import Page, Type
 
 
-def types(request):
+def page_types(request):
     types = Type.all()
-    return render_to_response("type/types.html", {
+    return render_to_response("types/types.html", {
         "types": types
     }, context_instance=RequestContext(request))
 
 
-def type(request, name):
+def page_type(request, name):
     t = Type.by_name(name)
-    return render_to_response("type/type.html", {
+    return render_to_response("types/type.html", {
         "t": types
     }, context_instance=RequestContext(request))
 
-def page_by_types(request, tname):
+def page_by_type(request, tname):
     pages = Page.by_type(tname)
-    return render_to_response("type/pages.html", {
+    return render_to_response("types/pages.html", {
         "pages": pages
     }, context_instance=RequestContext(request))
                 
