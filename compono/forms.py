@@ -26,6 +26,6 @@ class CreatePage(forms.Form):
                                                 
 class EditPage(forms.Form):
     page_id = forms.CharField(widget=forms.HiddenInput)
-    title = forms.CharField()
-    description = forms.CharField(widget=forms.Textarea(
+    title = forms.CharField(label="Title")
+    body = forms.CharField(label="Body", widget=forms.Textarea(
                                                 attrs={'cols':80, 'rows':5}))

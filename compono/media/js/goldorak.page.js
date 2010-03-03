@@ -24,13 +24,14 @@
     {
       id: "ta",
       label: "Long Text input",
-      tpl: '<br><textarea name="{{ name }}" id="{{ name }}" class="resize">'
+      tpl: '<br><textarea name="{{ name }}" id="{{ name }}" class="resize txt">'
             + '</textarea>'
     }
   ];
   
-  var new_input = '<p class="custom"><input type="text" name="{{lname}}" id="{{lname}}"'
-  +' value="{{ label }}"> {{>tpl}}<a class="delete" href="#">delete</a></p>';
+  var new_input = '<p class="custom"><input type="text" name="{{lname}}"'
+  +' id="{{lname}}" value="{{ label }}"> {{>tpl}}<a class="delete" href="#">'
+  +'delete</a></p>';
 
   $.goldorak = $.goldorak || {};
   $.extend($.goldorak, {
@@ -43,6 +44,10 @@
       var page = this;
       var nb_fields = 0;
       var dt = {};
+      
+      // intialize
+      $("#tabs").tabs();
+      $("textarea").ckeditor(config);
       
       for (i=0; i<field_types.length; i++) {
         var field = field_types[i];
@@ -58,10 +63,10 @@
           var fname = f.id + "_" + nb_fields;          
          
           var h = Mustache.to_html(new_input, {
-            lname: "lcustom -" + fname,
+            lname: "lcustom-" + fname,
             label: label,
             tpl: {
-              name: "custom -" + fname
+              name: "custom-" + fname
             }
           }, { tpl: f.tpl});
           
@@ -71,9 +76,13 @@
             e.preventDefault();
             $(this).parent().remove()
             return false;
-          }).appendTo(inp);
+          });
+          $
           
           $("#custom_fields").append(inp);
+          
+          $(".txt").ckeditor(config);
+          
         })
         .appendTo('#fieldsTypes');
         

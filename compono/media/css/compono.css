@@ -1,4 +1,9 @@
-#edit {
+body {
+    font-family: "Arial", "Helvetica", "Verdana", "sans-serif";
+    font-size: 10px;
+}
+
+#cedit {
     display: block;
     width: 70%;
 }

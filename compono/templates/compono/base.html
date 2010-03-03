@@ -19,7 +19,7 @@
     <![endif]-->
 
     {% load componomedia %}
-    <link rel="stylesheet" href="{% compono_media_url %}/css/ui-lightness/jquery-ui-1.8rc3.custom.css" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="{% compono_media_url %}/css/start/jquery-ui-1.8rc3.custom.css" type="text/css" media="screen, projection" />
     <link rel="stylesheet" href="{% compono_media_url %}/css/compono.css" type="text/css" media="screen, projection" />
 </head>
 
@@ -27,10 +27,11 @@
   
   {% block content %}{% endblock %}
 
-</body>
-<script type="text/javascript" src="{% compono_media_url %}/js/mustache.js"></script>
-<script type="text/javascript" src="{% compono_media_url %}/js/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="{% compono_media_url %}/js/jquery-ui-1.8rc3.custom.min.js"></script>
+  <script type="text/javascript" src="{% compono_media_url %}/js/mustache.js"></script>
+  <script type="text/javascript" src="{% compono_media_url %}/js/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="{% compono_media_url %}/js/jquery-ui-1.8rc3.custom.min.js"></script>
 
-{% block extrascripts %}{% endblock %}
+  {% block extrascripts %}{% endblock %}
+</body>
+
 </html>
