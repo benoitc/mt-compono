@@ -19,14 +19,22 @@
     {
       id: "t",
       label: "Text input",
-      tpl: '<input type="text" name="{{ name }}" id="{{ name }}">'
+      tpl: '<input type="text" name="{{ name }}" id="{{ name }}">',
+      propertyName: "Text"
     },
     {
       id: "ta",
       label: "Long Text input",
       tpl: '<br><textarea name="{{ name }}" id="{{ name }}" class="resize txt">'
-            + '</textarea>'
-    }
+            + '</textarea>',
+      propertyName: "LongText"
+    },
+    {
+      id: "d",
+      label: "Datepicker",
+      tpl: '<input type="text" name="{{ name }}" id="{{ name }}" class="date">',
+      propertyName: "Date"
+    },
   ];
   
   var new_input = '<p class="custom"><input type="text" name="{{lname}}"'
@@ -47,7 +55,11 @@
       
       // intialize
       $("#tabs").tabs();
-      $("textarea").ckeditor(config);
+      $("#id_body").ckeditor(config);
+      
+      
+      
+      
       
       for (i=0; i<field_types.length; i++) {
         var field = field_types[i];
@@ -77,7 +89,7 @@
             $(this).parent().remove()
             return false;
           });
-          $
+          $(".date", inp).datepicker();
           
           $("#custom_fields").append(inp);
           
@@ -85,7 +97,6 @@
           
         })
         .appendTo('#fieldsTypes');
-        
       }
       
 

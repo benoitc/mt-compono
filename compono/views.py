@@ -44,8 +44,11 @@ def page_handler(request, path=None):
         
     if request.GET.get('edit') and can_edit(request.user, page):
         return edit_page(request, page)
-    elif page.need_edit and can_edit(request.user, page):
-        return edit_page(request, page)
+    elif page.need_edit:
+        if can_edit(request.user, page):
+            return edit_page(request, page)
+        else:
+            raise Http404
     elif page.draft:
         if request.user.is_authenticated():
             return show_page(request, page)

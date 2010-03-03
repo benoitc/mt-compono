@@ -29,3 +29,5 @@ class EditPage(forms.Form):
     title = forms.CharField(label="Title")
     body = forms.CharField(label="Body", widget=forms.Textarea(
                                                 attrs={'cols':80, 'rows':5}))
+    template = forms.CharField(label="Template", widget=forms.Textarea(
+                                                attrs={'cols':100, 'rows':20}))

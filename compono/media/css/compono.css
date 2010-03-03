@@ -14,3 +14,8 @@ body {
     width: 28%;
     position: relative;
 }
+
+.CodeMirror-wrapping {
+    border: 1px solid #999;
+     height: 450px;
+}
