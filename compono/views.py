@@ -3,6 +3,10 @@
 # This file is part of compono released under the Apache 2 license. 
 # See the NOTICE for more information.
 
+from __future__ import with_statement
+
+import os
+
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.http import Http404, HttpResponseRedirect
@@ -14,6 +18,9 @@ from django.core.urlresolvers import reverse
 from compono.forms import CreatePage, EditPage
 from compono.models import Page, Type
 from compono.permissions import can_create, can_edit
+
+DEFAULT_TEMPLATE = os.path.join(os.path.dirname(__file__), 'templates',
+                                'compono', "default.html")
 
 def page_types(request):
     types = Type.all()
@@ -82,8 +89,18 @@ def create_page(request, path):
     }, context_instance=RequestContext(request))
     
 def edit_page(request, page):
-    fedit = EditPage(initial={"page_id": page._id})
-    
+    initial = {
+        "page_id": page._id
+    }
+    if not 'template' in page:
+        default = getattr(settings, 'COMPONO_DEFAULT_TEMPLATE', 
+                    DEFAULT_TEMPLATE)
+
+        with open(default, 'r') as f:
+            initial.update({'template':f.read()})
+            
+    fedit = EditPage(initial=initial)
+
     return render_to_response("pages/edit_page.html", {
         "f": fedit
     }, context_instance=RequestContext(request))
