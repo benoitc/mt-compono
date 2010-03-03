@@ -61,4 +61,20 @@ And allow register the CouchDB database associated::
        ('compono', "http://127.0.0.1:5984/yourdb"),
   )
 
+Then Edit your main `urls.py` file and add it to your pattern::
+
+  urlpatterns = pattern('',
+      ...
+      url('^', include('compono.urls')),
+  )
+
 that's it.
+
+Compono media path
+------------------
+
+If you want to serve compono media (needed for its admin), copy the `compono/media` folder where you want. You can even customize url by setting `COMPONO_MEDIA_URL` in your settings file::
+
+  COMPONO_MEDIA_URL = '/media/compono' # without trailing slash
+  
+In development you can configure the media root by settings `COMPONO_MEDIA_ROOT`, but it's generally not needed.

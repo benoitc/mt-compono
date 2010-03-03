@@ -18,10 +18,7 @@ COMPONO_MEDIA_URL = getattr(settings, 'COMPONO_MEDIA_URL',
 if COMPONO_MEDIA_URL.startswith('/'):
     COMPONO_MEDIA_URL = COMPONO_MEDIA_URL[1:]
 
-print COMPONO_MEDIA_ROOT
 if settings.APPEND_SLASH:
-    
-    
     r = url(r'^(?P<path>.*)/$', page_handler, name='page_handler')
 else:
     r = url(r'^(?P<path>.*)$', page_handler, name='page_handler')
