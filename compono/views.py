@@ -13,6 +13,7 @@ from django.core.urlresolvers import reverse
 
 from compono.forms import CreatePage
 from compono.models import Page, Type
+from compono.permissions import can_create, can_edit
 
 def page_types(request):
     types = Type.all()
@@ -37,15 +38,21 @@ def page_handler(request, path=None):
     if path.endswith('/'): path = path[:-1]
     page = Page.from_path(path)
     if page is None:
-        
-        if request.user.is_authenticated():
-            if user.groups.filter(name="administrateurs").count() > 0:
-                return create_page(request, path)
+        if can_create(request.user):
+            return create_page(request, path)
         raise Http404
-    if request.GET.get('edit') == "1" and request.user.is_authenticated():
-        print "ici"
+        
+    if request.GET.get('edit') and can_edit(request.user, page):
         return edit_page(request, page)
-    return show_page(request, page)
+    elif page.need_edit and can_edit(request.user, page):
+        return edit_page(request, page)
+    elif page.draft:
+        if request.user.is_authenticated():
+            return show_page(request, page)
+        else:
+            raise Http404
+    else:
+        return show_page(request, page)
     
 def create_page(request, path):
     if request.method == "POST":
@@ -56,7 +63,8 @@ def create_page(request, path):
             page = Page({
                 "urls": [path],
                 "editors": fcreate.cleaned_data['editors'],
-                "page_type": fcreate.cleaned_data['page_type']
+                "page_type": fcreate.cleaned_data['page_type'],
+                "need_edit": True
             })
             page.save()
             redirect_path = "%s?edit=1" % reverse('page_handler', 

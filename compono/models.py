@@ -5,7 +5,7 @@
 
 from datetime import datetime
 from couchdbkit.ext.django.schema import Document, StringProperty, \
-DateTimeProperty, StringListProperty
+DateTimeProperty, StringListProperty, BooleanProperty
 
 class Page(Document):
     title = StringProperty()
@@ -13,6 +13,8 @@ class Page(Document):
     groups = StringListProperty()
     ctype = StringProperty()
     urls = StringListProperty()
+    need_edit = BooleanProperty(default=True)
+    draft = BooleanProperty(default=False)
     created = DateTimeProperty()
     updated = DateTimeProperty(default=datetime.utcnow)
 
