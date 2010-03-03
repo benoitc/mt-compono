@@ -67,8 +67,8 @@ def create_page(request, path):
                 "need_edit": True
             })
             page.save()
-            redirect_path = "%s?edit=1" % reverse('page_handler', 
-                                                kwargs={"path":path})
+            redirect_path = "%s?edit=1&create=1" % reverse('page_handler', 
+                                                        kwargs={"path":path})
             return HttpResponseRedirect(redirect_path)
     else:
         fcreate = CreatePage(initial=dict(path=path))

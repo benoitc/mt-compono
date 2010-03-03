@@ -2,6 +2,12 @@
 
 
 {% block content %}
+<aside id="tools">
+  <h2>FieldsTypes:</h2>
+  <ul id="fieldsTypes"></ul>
+  
+</aside>
+<section id="edit">
   <form action=".?edit=1" method="post" accept-charset="utf-8">
     {% csrf_token %}
     {{ f.page_id }}
@@ -14,4 +20,6 @@
 
     <p><input type="submit" value="Continue &rarr;"></p>
   </form>
+</section>
+
 {% endblock %}

@@ -1,0 +1,11 @@
+#edit {
+    display: block;
+    width: 70%;
+}
+
+#tools {
+    display: block;
+    float: right;
+    width: 28%;
+    position: relative;
+}
