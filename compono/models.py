@@ -20,12 +20,18 @@ class Page(Document):
     
     def save(self, **params):
         if not self._rev:
-            self.created = datetime.utcnow()
-        super(Page, document).save(**params)
+            self.created = datetime.utcnow()    
+        super(Page, self).save(**params)
+        
+        # add a revision
+        attachment_name = self._doc['updated']
+        self.put_attachment(attachment_name, self.to_json(), 
+                        content_type="application/json")
     
     @classmethod    
     def from_path(cls, path):
         key = path.split('/')
+        print str(key)
         res = cls.view("compono/from_path", key=key, include_doc=True).first()
         return res
         

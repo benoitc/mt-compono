@@ -19,20 +19,17 @@
     <![endif]-->
 
     {% load componomedia %}
-    <link rel="stylesheet" href="{{ compono_media_url }}/css/compono.css" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="{% compono_media_url %}/css/compono.css" type="text/css" media="screen, projection" />
 </head>
 
 <body>
   
-  {% block content %}
-    
-  {% endblock %}
-  
-  {% block extrascripts %}
-    
-  {% endblock %}
+  {% block content %}{% endblock %}
+
 </body>
+<script type="text/javascript" src="{% compono_media_url %}/js/mustache.js"></script>
 <script type="text/javascript" src="{% compono_media_url %}/js/jquery-1.4.1.js"></script>
 <script type="text/javascript" src="{% compono_media_url %}/js/sammy.js"></script>
-
+<script type="text/javascript" src="{% compono_media_url %}/js/plugins/sammy.mustache.js"></script>
+{% block extrascripts %}{% endblock %}
 </html>

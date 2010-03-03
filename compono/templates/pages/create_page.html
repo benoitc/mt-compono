@@ -6,21 +6,20 @@
 
   <h1>Create a new context or new page</h1>
 	<section id="create">
+	  
+	  {% if f.errors %}
+	   {{ f.errors }}
+	  {% endif %}
 		
-		<form method="post" action="#/">
+		<form method="post" action=".">
+		  {% csrf_token %}
+		  {{ f.path }}
 			<p>You can now choose to create a new content or a context</p>
-			<input type="hidden" name="step" id="step" value="1">
-			<select name="page_type" id="page_type">
-				<option value="content">Create a content page</option>
-				<option value="context">Create a context page</option>
-			</select> 
+
+			  {{ f.page_type }}
 			<fieldset>
 			  <legend>Associate groups of editors to this page</legend>
-			  <select name="editors" size="6" multiple="multiple">
-  			  {% for g in groups %}
-  			    <option value="{{ g.name }}">{{ g.name}}</options>
-  			  {% endfor %}
-  			</select>
+			  {{ f.editors }}
 			</fieldset>
 			<input type="submit" name="bsubmit" value="Continue">
 		</form>
@@ -28,10 +27,13 @@
 {% endblock %}
 
 {% block extrascripts %}
-	<script type="text/javascript"                              src="{% compono_media_url %}/js/ckeditor/ckeditor.js"></script>
+  <script>
+    var COMPONO_MEDIA_URL = "{% compono_media_url %}";
+  </script>
+  
+	<script type="text/javascript" src="{% compono_media_url %}/js/ckeditor/ckeditor.js"></script>
 	<script type="text/javascript" src="{% compono_media_url %}/js/ckeditor/adapters/jquery.js"></script>
 	<script type="text/javascript" src="{% compono_media_url %}/js/goldorak.page.js"></script>
-	<script>
-		new $.goldorak.createPage();
-	</script>
+	
+	
 {% endblock %}

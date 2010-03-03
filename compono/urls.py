@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     url(r'^types', page_types, name='page_types'),
     url(r'^type/(?P<name>.*)$', page_type, name='page_types'),
     url(r'^type/(?P<name>.*)/pages$', page_by_type, name='page_by_types'),
+    
     (r'^%s/(?P<path>.*)$' % COMPONO_MEDIA_URL, 'django.views.static.serve', 
               {'document_root': COMPONO_MEDIA_ROOT}),
     r,

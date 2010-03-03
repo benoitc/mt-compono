@@ -3,6 +3,8 @@
 
 (function($) {
 
+  var template_path = COMPONO_MEDIA_URL + '/templates/';
+  
   var config = {
     toolbar:
     [
@@ -29,7 +31,7 @@
 
         this.get("#/create/content", function(ctx) {
           ctx.app.swap('');
-          this.partial("/static/templates/create_content.html", { 
+          this.partial(template_path + "create_content.html", { 
             page_type: "content" }, function(response) {
               $("#create").html(response);
               $.goldorak.editor("#content");
@@ -39,7 +41,7 @@
 
         this.get("#/create/context", function(ctx) {
           ctx.app.swap('');
-          this.partial("/static/templates/create_context.html", 
+          this.partialtemplate_path + ("create_context.html", 
           { page_type: "context" }, function(response) {
             $("#create").html(response);
           });
@@ -53,7 +55,7 @@
 
         this.get("#/", function(ctx) {
           ctx.app.swap('');
-          this.partial("/static/templates/create_page.html", 
+          this.partial(template_path + "create_page.html", 
           function(response) {
             $("#create").html(response);
           });

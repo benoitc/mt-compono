@@ -3,17 +3,16 @@
 # This file is part of compono released under the Apache 2 license. 
 # See the NOTICE for more information.
 
-
-from couchdbkit.ext.django import loading
 from django.conf import settings
 from django.contrib.auth.models import Group
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
+from django.core.urlresolvers import reverse
 
 
+from compono.forms import CreatePage
 from compono.models import Page, Type
-
 
 def page_types(request):
     types = Type.all()
@@ -35,23 +34,46 @@ def page_by_type(request, tname):
     }, context_instance=RequestContext(request))
                 
 def page_handler(request, path=None):
+    if path.endswith('/'): path = path[:-1]
     page = Page.from_path(path)
     if page is None:
-        user = getattr(request, 'user')
-        if user and user.is_authenticated():
+        
+        if request.user.is_authenticated():
             if user.groups.filter(name="administrateurs").count() > 0:
-                return create_page(request)
+                return create_page(request, path)
         raise Http404
+    if request.GET.get('edit') == "1" and request.user.is_authenticated():
+        print "ici"
+        return edit_page(request, page)
     return show_page(request, page)
     
-def create_page(request):
-    groups = Group.objects.all()
+def create_page(request, path):
+    if request.method == "POST":
+        fcreate = CreatePage(request.POST)
+        if fcreate.is_valid():
+            path = fcreate.cleaned_data['path']
+            if path.endswith('/'): path = path[:-1]
+            page = Page({
+                "urls": [path],
+                "editors": fcreate.cleaned_data['editors'],
+                "page_type": fcreate.cleaned_data['page_type']
+            })
+            page.save()
+            redirect_path = "%s?edit=1" % reverse('page_handler', 
+                                                kwargs={"path":path})
+            return HttpResponseRedirect(redirect_path)
+    else:
+        fcreate = CreatePage(initial=dict(path=path))
     
     return render_to_response("pages/create_page.html", {
         "path": request.path,
-        'groups': Group.objects.all()
+        "f": fcreate
     }, context_instance=RequestContext(request))
     
+def edit_page(request, page):
+    return render_to_response("pages/edit_page.html", {
+    }, context_instance=RequestContext(request))
+
 def show_page(request, page):
     return render_to_response("pages/create_page.html", {
         "path": request.path
