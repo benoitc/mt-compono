@@ -1,5 +1,5 @@
 {% extends "compono/base.html" %}
-
+{% load componomedia %}
 
 {% block content %}
 <aside id="tools">
@@ -18,8 +18,28 @@
       {{ f.description }}
     </fieldset>
 
+    <fieldset id="custom_fields" class="">
+      <legend>Custom fields</legend>
+      
+      
+    </fieldset>
     <p><input type="submit" value="Continue &rarr;"></p>
   </form>
 </section>
 
+{% endblock %}
+
+{% block extrascripts %}
+  <script>
+    var COMPONO_MEDIA_URL = "{% compono_media_url %}";
+  </script>
+  
+	<script type="text/javascript" src="{% compono_media_url %}/js/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="{% compono_media_url %}/js/ckeditor/adapters/jquery.js"></script>
+	<script type="text/javascript" src="{% compono_media_url %}/js/goldorak.page.js"></script>
+	
+	<script>
+	  new $.goldorak.createPage();
+	</script>
+	
 {% endblock %}
