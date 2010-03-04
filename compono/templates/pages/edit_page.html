@@ -11,38 +11,37 @@
     <li><a href="#edit">Content</a></li>
     <li><a href="#template">Templates</a></li>
   </ul>
+  
   <form id="fedit" action=".?edit=1" method="post" accept-charset="utf-8">
-  <section id="edit">
-    
-      <aside id="tools">
-        <h2>FieldsTypes:</h2>
-        <ul id="fieldsTypes"></ul>
-      </aside>
-      <div id="cedit">
-          {% csrf_token %}
-          {{ f.page_id }}
-            <h2>Edit page</h2>
-            <p><label for="id_title"> {{ f.title.label }}</label>{{ f.title }}</p>
-            <label for="id_body">{{ f.body.label }}</label><br>
-            {{ f.body }}
+    <section id="edit">
+      
+        <aside id="tools">
+          <h2>FieldsTypes:</h2>
+          <ul id="fieldsTypes"></ul>
+        </aside>
+      
+        <div id="cedit">
+            {% csrf_token %}
+            {{ f.page_id }}
+              <h2>Edit page</h2>
+              <p><label for="id_title"> {{ f.title.label }}</label>{{ f.title }}</p>
+              <label for="id_body">{{ f.body.label }}</label><br>
+              {{ f.body }}
 
-          <fieldset id="custom_fields" class="">
-            <legend>Custom fields</legend>
-      
-      
-          </fieldset>
-          <p><input type="submit" value="Continue &rarr;"></p>
-      </div>
-      
-      
-      
-  </section>
+            <fieldset id="custom_fields" class="">
+              <legend>Custom fields</legend>
+            </fieldset>
+            <p><input class="submit" type="submit" value="Save"></p>
+        </div>
+    </section>
 
-  <section id="template">
-    <h2>Edit the template</h2>
-    {{ f.template }}
-  </section>
+    <section id="template">
+      <h2>Edit the template</h2>
+      {{ f.template }}
+       <p><input class="submit" type="submit" value="Save"></p>
+    </section>
   </form>
+  
 </div>
 {% endblock %}
 
@@ -69,7 +68,7 @@
           height: "450px"
 
         });
-    		
+    		$("input:submit").button();
     	});
 	</script>
 	
