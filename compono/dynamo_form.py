@@ -4,8 +4,9 @@
 # See the NOTICE for more information.
 
 from django.forms.util import ValidationError, ErrorList
-from django.forms.forms import BaseForm, get_declared_fields
-from django.forms import fields as f
+from django.forms.forms import BaseForm, get_declared_fields, BoundField
+from django import forms
+from django.utils.datastructures import SortedDict
 
 from couchdbkit.ext.django.forms import DocumentForm
 
@@ -13,30 +14,89 @@ from couchdbkit.ext.django.forms import DocumentForm
 from compono.models import Page
 
 EXTRA_PROPERTIES_MAPPING = {
-    'Text': (f.CharField, None, None),
-    'LongText': (f.CharField, f.ChoiceField),
-    'Date': (f.CharField, None, {'class': 'date'})
+    'Text': (forms.CharField, None, None),
+    'LongText': (forms.CharField, forms.Textarea),
+    'Date': (forms.CharField, None, {'class': 'date'})
+}
+
+DATA_EXTRA_MAPPING = {
+    't': (forms.CharField, None, None),
+    'ta': (forms.CharField, forms.Textarea),
+    'd': (forms.CharField, None, {'class': 'date'})
+}
+
+DATA_PROPERTIES_MAPPING = {
+    't': 'Text',
+    'ta': 'LongText',
+    'd': 'Date'
 }
 
 
 class DynamoForm(DocumentForm):
     """ Base Document Form object """
     
-    def __init__(self, *args, **kwargs):
-
-        super(DynamoForm, self).__init__(*args, **kwargs)
-        self.extra_fields = []                                
-        if hasattr(self.instance, 'extra_properties'):
-            for k, v in self.instance.extra_properties:
+    def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None, 
+            initial=None, error_class=ErrorList, label_suffix=":",
+            empty_permitted=False, instance=None):
+            
+        self.extra_fields = SortedDict()
+        initial = initial or {}
+        object_data = {}
+        extra_fields_keys = []
+        
+        if instance is not None and hasattr(instance, 'extra_properties'):
+            for k, v in instance.extra_properties:
                 f, w, a = EXTRA_PROPERTIES_MAPPING[v['name']]  
                 if not w:
                     field = f(label=v['label'])
                 else:
                     field = f(label=v['label'], widget=w(attrs=a))
-                self.fields['custom_%s' % k] = field
-                self.extra_fields.append(field)
-                                              
-                                            
+                self.extra_fields[k] = (field, forms.CharField())
+                
+                object_data['custom_%s' % k] =  v['value']
+                object_data['lcustom_%s' % k] = v['label']
+                extra_fields_keys.append(k)
+
+        object_data.update(initial)
+        
+        super(DynamoForm, self).__init__(data=data, files=files, 
+                    auto_id=auto_id, prefix=prefix, initial=object_data, 
+                    error_class=error_class, label_suffix=label_suffix,
+                    empty_permitted=empty_permitted, instance=instance)
+       
+        
+        
+        if self.extra_fields:
+            for name, fields in self.extra_fields.items():
+                f, l = fields
+                self.fields['custom_%s' % name] = f
+                self.fields['lcustom_%s' % name] = l
+                
+        if data:
+            for k, v in data.items():
+                if k.startswith('custom_'):
+                    try:
+                        _, key = k.split('_', 1)
+                        if key in extra_fields_keys:
+                            continue
+                        t, i = key.split('_')
+                        f, w, a = DATA_EXTRA_MAPPING[t]  
+                        if not w:
+                            field = f()
+                        else:
+                            field = f(widget=w(attrs=a))
+                        self.fields['custom_%s' % key] = field
+                        self.fields['lcustom_%s' % key] = forms.CharField()
+                        extra_fields_keys.append(k)
+                    except (ValueError, KeyError):
+                        continue                                          
+    
+    def extra_properties(self):
+        for name, fields in self.extra_fields.items():
+            f, l = fields
+            yield (BoundField(self, f, "custom_%" % name), 
+                BoundField(self, l, "lcustom_%s" % name))
+                                        
     def save(self, commit=True):
         """
         Saves this ``form``'s cleaned_data into document instance
@@ -46,6 +106,7 @@ class DynamoForm(DocumentForm):
         database. Returns ``instance``.
         """
         
+        print "data %s " % str(self.cleaned_data.items())
         opts = self._meta
         cleaned_data = self.cleaned_data.copy()
         for prop_name in self.instance._doc.keys():
@@ -61,23 +122,26 @@ class DynamoForm(DocumentForm):
         # fetch extra properties
         extra_properties_dict = {}
         for attr_name in cleaned_data.keys():
-            print attr_name
-            if attr_name.startswith('custom_'):
-                key = attr_name.split('custom_')[1]
-                try:
-                    extra_properties_dict[key]['value'] = cleaned_data[
-                                                                attr_name]
-                except KeyError:
-                    extra_properties_dict[key] = {
-                        'value': cleaned_data[attr_name]}
-            elif attr_name.startswith('lcustom_'):
-                try:
-                    extra_properties_dict[key]['label'] = cleaned_data[
-                                                                attr_name]
-                except KeyError:
-                    extra_properties_dict[key] = {
-                        'label': cleaned_data[attr_name]}
-        
+            if attr_name.startswith('custom_') or \
+                    attr_name.startswith('lcustom_'):
+                
+                key = attr_name.split('_', 1)[1]
+                if key not in extra_properties_dict.keys():
+                    v = {}
+                else:
+                    v = extra_properties_dict[key]
+                    
+                if attr_name[0] == "l":
+                    v.update({"label": cleaned_data[attr_name]})
+                else:
+                    t, i = key.split('_')
+                    v.update({
+                        "value": cleaned_data[attr_name],
+                        "name": DATA_PROPERTIES_MAPPING[t]
+                    })
+                    
+                extra_properties_dict[key] = v
+                
         
         extra_keys = extra_properties_dict.keys()
         extra_keys.sort()       

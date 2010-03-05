@@ -33,11 +33,11 @@
 
             <fieldset id="custom_fields" class="">
               <legend>Custom fields</legend>
+              
               {% if f.extra_fields %}
               
-              {% for field in f.extra_fields %}
-                  <label for="id_{{ field.name }}">{{ field.label }}</label>
-                  {{ field }}
+              {% for custom, lcustom in f.extra_properties %}
+                  <p>{{ custom }} {{ lcustom }}</p>
               {% endfor %}
                 
               {% endif %}
