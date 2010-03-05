@@ -22,6 +22,9 @@
       
         <div id="cedit">
             {% csrf_token %}
+            {% if f.errors %}
+                <p class="error">{{ f.errors }}</p>
+            {% endif %}
             {{ f.page_id }}
               <h2>Edit page</h2>
               <p><label for="id_title"> {{ f.title.label }}</label>{{ f.title }}</p>
@@ -30,6 +33,15 @@
 
             <fieldset id="custom_fields" class="">
               <legend>Custom fields</legend>
+              {% if f.extra_fields %}
+              
+              {% for field in f.extra_fields %}
+                  <label for="id_{{ field.name }}">{{ field.label }}</label>
+                  {{ field }}
+              {% endfor %}
+                
+              {% endif %}
+              
             </fieldset>
             <p><input class="submit" type="submit" value="Save"></p>
         </div>

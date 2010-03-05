@@ -72,10 +72,10 @@
           var fname = f.id + "_" + nb_fields;          
          
           var h = Mustache.to_html(new_input, {
-            lname: "lcustom-" + fname,
+            lname: "lcustom_" + fname,
             label: label,
             tpl: {
-              name: "custom-" + fname
+              name: "custom_" + fname
             }
           }, { tpl: f.tpl});
           
@@ -90,9 +90,6 @@
           $(".date", inp).datepicker();
           
           $("#custom_fields").append(inp);
-
-          $("#fedit").append('<input type="hidden" name="fcustom-'+ fname +
-                                      '" value="'+f.propertyName+'">');
           
           $(".txt").ckeditor(config);
           

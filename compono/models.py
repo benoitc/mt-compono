@@ -7,6 +7,11 @@ from datetime import datetime
 from couchdbkit.ext.django.schema import Document, StringProperty, \
 DateTimeProperty, StringListProperty, BooleanProperty
 
+try:
+    from simplejson import json
+except ImportError:
+    import json
+
 class Page(Document):
     title = StringProperty()
     body = StringProperty()
@@ -18,18 +23,18 @@ class Page(Document):
     need_edit = BooleanProperty(default=True)
     draft = BooleanProperty(default=False)
     created = DateTimeProperty()
-    updated = DateTimeProperty(default=datetime.utcnow)
+    updated = DateTimeProperty()
 
     doc_type = "page"
     
     def save(self, **params):
         if not self._rev:
-            self.created = datetime.utcnow()    
+            self.created = datetime.utcnow()
+        self.updated = datetime.utcnow()
         super(Page, self).save(**params)
-        
         # add a revision
         attachment_name = "rev_%s" % self._doc['updated']
-        self.put_attachment(attachment_name, self.to_json(), 
+        self.put_attachment(json.dumps(self.to_json()), attachment_name, 
                         content_type="application/json")
     
     @classmethod    

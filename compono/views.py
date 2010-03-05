@@ -89,18 +89,25 @@ def create_page(request, path):
     }, context_instance=RequestContext(request))
     
 def edit_page(request, page):
-    initial = {}
-    if not 'template' in page:
-        default = getattr(settings, 'COMPONO_DEFAULT_TEMPLATE', 
-                    DEFAULT_TEMPLATE)
+    msg = None
+    if request.POST:
+        fedit = EditPage(request.POST, instance=page)
+        if fedit.is_valid():
+            page = fedit.save()
+            msg = "Page saved"
+    else:
+        initial = {}
+        if not page.template:
+            default = getattr(settings, 'COMPONO_DEFAULT_TEMPLATE', 
+                            DEFAULT_TEMPLATE)
 
-        with open(default, 'r') as f:
-            initial.update({'template':f.read()})
-            
-    fedit = EditPage(initial=initial, instance=page)
+            with open(default, 'r') as f:
+                initial.update({'template':f.read()})
+        fedit = EditPage(initial=initial, instance=page)
 
     return render_to_response("pages/edit_page.html", {
-        "f": fedit
+        "f": fedit,
+        "msg": msg
     }, context_instance=RequestContext(request))
 
 def show_page(request, page):

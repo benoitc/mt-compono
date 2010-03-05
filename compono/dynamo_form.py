@@ -25,7 +25,7 @@ class DynamoForm(DocumentForm):
     def __init__(self, *args, **kwargs):
 
         super(DynamoForm, self).__init__(*args, **kwargs)
-                                            
+        self.extra_fields = []                                
         if hasattr(self.instance, 'extra_properties'):
             for k, v in self.instance.extra_properties:
                 f, w, a = EXTRA_PROPERTIES_MAPPING[v['name']]  
@@ -34,6 +34,7 @@ class DynamoForm(DocumentForm):
                 else:
                     field = f(label=v['label'], widget=w(attrs=a))
                 self.fields['custom_%s' % k] = field
+                self.extra_fields.append(field)
                                               
                                             
     def save(self, commit=True):
@@ -60,6 +61,7 @@ class DynamoForm(DocumentForm):
         # fetch extra properties
         extra_properties_dict = {}
         for attr_name in cleaned_data.keys():
+            print attr_name
             if attr_name.startswith('custom_'):
                 key = attr_name.split('custom_')[1]
                 try:
