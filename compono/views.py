@@ -89,9 +89,7 @@ def create_page(request, path):
     }, context_instance=RequestContext(request))
     
 def edit_page(request, page):
-    initial = {
-        "page_id": page._id
-    }
+    initial = {}
     if not 'template' in page:
         default = getattr(settings, 'COMPONO_DEFAULT_TEMPLATE', 
                     DEFAULT_TEMPLATE)
@@ -99,7 +97,7 @@ def edit_page(request, page):
         with open(default, 'r') as f:
             initial.update({'template':f.read()})
             
-    fedit = EditPage(initial=initial)
+    fedit = EditPage(initial=initial, instance=page)
 
     return render_to_response("pages/edit_page.html", {
         "f": fedit

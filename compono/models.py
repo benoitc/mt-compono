@@ -9,6 +9,8 @@ DateTimeProperty, StringListProperty, BooleanProperty
 
 class Page(Document):
     title = StringProperty()
+    body = StringProperty()
+    template = StringProperty()
     page_type = StringProperty(default="page")
     groups = StringListProperty()
     ctype = StringProperty()

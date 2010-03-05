@@ -56,10 +56,7 @@
       // intialize
       $("#tabs").tabs();
       $("#id_body").ckeditor(config);
-      
-      
-      
-      
+
       
       for (i=0; i<field_types.length; i++) {
         var field = field_types[i];
@@ -87,11 +84,15 @@
           $('a.delete', inp).click(function(e) {
             e.preventDefault();
             $(this).parent().remove()
+            
             return false;
           });
           $(".date", inp).datepicker();
           
           $("#custom_fields").append(inp);
+
+          $("#fedit").append('<input type="hidden" name="fcustom-'+ fname +
+                                      '" value="'+f.propertyName+'">');
           
           $(".txt").ckeditor(config);
           
