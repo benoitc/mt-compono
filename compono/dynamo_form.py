@@ -94,9 +94,9 @@ class DynamoForm(DocumentForm):
     def extra_properties(self):
         for name, fields in self.extra_fields.items():
             f, l = fields
-            yield (BoundField(self, f, "custom_%" % name), 
+            yield (BoundField(self, f, "custom_%s" % name), 
                 BoundField(self, l, "lcustom_%s" % name))
-                                        
+                    
     def save(self, commit=True):
         """
         Saves this ``form``'s cleaned_data into document instance
