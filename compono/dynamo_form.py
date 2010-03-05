@@ -15,13 +15,13 @@ from compono.models import Page
 
 EXTRA_PROPERTIES_MAPPING = {
     'Text': (forms.CharField, None, None),
-    'LongText': (forms.CharField, forms.Textarea),
+    'LongText': (forms.CharField, forms.Textarea, {'class': 'txt'}),
     'Date': (forms.CharField, None, {'class': 'date'})
 }
 
 DATA_EXTRA_MAPPING = {
     't': (forms.CharField, None, None),
-    'ta': (forms.CharField, forms.Textarea),
+    'ta': (forms.CharField, forms.Textarea, {'class': 'txt'}),
     'd': (forms.CharField, None, {'class': 'date'})
 }
 
@@ -62,23 +62,24 @@ class DynamoForm(DocumentForm):
         super(DynamoForm, self).__init__(data=data, files=files, 
                     auto_id=auto_id, prefix=prefix, initial=object_data, 
                     error_class=error_class, label_suffix=label_suffix,
-                    empty_permitted=empty_permitted, instance=instance)
-       
-        
+                    empty_permitted=empty_permitted, instance=instance)        
         
         if self.extra_fields:
             for name, fields in self.extra_fields.items():
                 f, l = fields
                 self.fields['custom_%s' % name] = f
                 self.fields['lcustom_%s' % name] = l
-                
+         
+        print "data %s" % data
+              
         if data:
             for k, v in data.items():
                 if k.startswith('custom_'):
                     try:
                         _, key = k.split('_', 1)
-                        if key in extra_fields_keys:
-                            continue
+                        
+                        if key in self.extra_fields:
+                            continue       
                         t, i = key.split('_')
                         f, w, a = DATA_EXTRA_MAPPING[t]  
                         if not w:
@@ -87,7 +88,7 @@ class DynamoForm(DocumentForm):
                             field = f(widget=w(attrs=a))
                         self.fields['custom_%s' % key] = field
                         self.fields['lcustom_%s' % key] = forms.CharField()
-                        extra_fields_keys.append(k)
+                        self.extra_fields[k] = (field, forms.CharField())
                     except (ValueError, KeyError):
                         continue                                          
     
@@ -106,7 +107,7 @@ class DynamoForm(DocumentForm):
         database. Returns ``instance``.
         """
         
-        print "data %s " % str(self.cleaned_data.items())
+        print "cleaned_data %s " % str(self.cleaned_data.items())
         opts = self._meta
         cleaned_data = self.cleaned_data.copy()
         for prop_name in self.instance._doc.keys():
@@ -138,11 +139,9 @@ class DynamoForm(DocumentForm):
                     v.update({
                         "value": cleaned_data[attr_name],
                         "name": DATA_PROPERTIES_MAPPING[t]
-                    })
-                    
+                    })                  
                 extra_properties_dict[key] = v
-                
-        
+                     
         extra_keys = extra_properties_dict.keys()
         extra_keys.sort()       
         extra_properties = [(k, extra_properties_dict[k]) for k in extra_keys]

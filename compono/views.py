@@ -91,7 +91,7 @@ def create_page(request, path):
 def edit_page(request, page):
     msg = None
     if request.POST:
-        fedit = EditPage(request.POST, instance=page)
+        fedit = EditPage(request.POST, auto_id=False, instance=page)
         if fedit.is_valid():
             page = fedit.save()
             msg = "Page saved"
@@ -103,7 +103,7 @@ def edit_page(request, page):
 
             with open(default, 'r') as f:
                 initial.update({'template':f.read()})
-        fedit = EditPage(initial=initial, instance=page)
+        fedit = EditPage(initial=initial, auto_id=False, instance=page)
 
     return render_to_response("pages/edit_page.html", {
         "f": fedit,

@@ -37,7 +37,7 @@
               {% if f.extra_fields %}
               
               {% for custom, lcustom in f.extra_properties %}
-                  <p>{{ custom }} {{ lcustom }}</p>
+                  <p class="custom">{{ lcustom }} {{ custom }} <a class="delete" href="#">delete</a></p>
               {% endfor %}
                 
               {% endif %}
@@ -73,7 +73,7 @@
 	      
 	      new $.goldorak.createPage();
 	      
-	      new CodeMirror.fromTextArea("id_template",  {
+	      new CodeMirror.fromTextArea("template",  {
           parserfile: "parsexml.js",
           stylesheet: COMPONO_MEDIA_URL +"/css/xmlcolors.css",
           path: COMPONO_MEDIA_URL + "/js/codemirror/",

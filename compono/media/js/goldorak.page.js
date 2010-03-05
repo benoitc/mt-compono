@@ -49,14 +49,23 @@
     },
 
     createPage: function() {
+      
       var page = this;
-      var nb_fields = 0;
+      var nb_fields = $('.custom').length || 0;
       var dt = {};
       
       // intialize
       $("#tabs").tabs();
-      $("#id_body").ckeditor(config);
+      $("#body").ckeditor(config);
+      
+      $('a.delete').click(function(e) {
+         e.preventDefault();
+        $(this).parent().remove()
+      });
 
+      $(".txt").ckeditor(config);
+      
+      
       
       for (i=0; i<field_types.length; i++) {
         var field = field_types[i];
