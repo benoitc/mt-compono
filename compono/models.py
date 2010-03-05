@@ -8,7 +8,7 @@ from couchdbkit.ext.django.schema import Document, StringProperty, \
 DateTimeProperty, StringListProperty, BooleanProperty
 
 try:
-    from simplejson import json
+    import simplejson as json
 except ImportError:
     import json
 

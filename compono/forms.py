@@ -38,7 +38,7 @@ class EditPage(DynamoForm):
                                                         'id': "body"}))
     template = forms.CharField(label="Template", required=False,
                         widget=forms.Textarea(attrs={'cols':100, 'rows':20,
-                                                    'id': 'template'}))
+                                                    'id': 'tpl'}))
                                                 
     class Meta:
         document = Page

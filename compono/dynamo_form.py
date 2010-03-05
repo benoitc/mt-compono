@@ -57,6 +57,7 @@ class DynamoForm(DocumentForm):
                 object_data['lcustom_%s' % k] = v['label']
                 extra_fields_keys.append(k)
 
+
         object_data.update(initial)
         
         super(DynamoForm, self).__init__(data=data, files=files, 
@@ -88,7 +89,7 @@ class DynamoForm(DocumentForm):
                             field = f(widget=w(attrs=a))
                         self.fields['custom_%s' % key] = field
                         self.fields['lcustom_%s' % key] = forms.CharField()
-                        self.extra_fields[k] = (field, forms.CharField())
+                        #self.extra_fields[k] = (field, forms.CharField())
                     except (ValueError, KeyError):
                         continue                                          
     
@@ -143,7 +144,7 @@ class DynamoForm(DocumentForm):
                 extra_properties_dict[key] = v
                      
         extra_keys = extra_properties_dict.keys()
-        extra_keys.sort()       
+        extra_keys.sort()
         extra_properties = [(k, extra_properties_dict[k]) for k in extra_keys]
         if extra_properties:
             setattr(self.instance, "extra_properties", extra_properties)
