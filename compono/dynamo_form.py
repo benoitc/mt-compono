@@ -66,19 +66,20 @@ class DynamoForm(DocumentForm):
                     empty_permitted=empty_permitted, instance=instance)        
         
         if self.extra_fields:
-            for name, fields in self.extra_fields.items():
-                f, l = fields
-                self.fields['custom_%s' % name] = f
+            for name, fields in self.extra_fields.items():              
+                fname = 'custom_%s' % name
+                if data is not None and fname not in data:
+                    del self.extra_fields[name]
+                    continue
+                f, l = fields   
+                self.fields[fname] = f
                 self.fields['lcustom_%s' % name] = l
-         
-        print "data %s" % data
-              
+                       
         if data:
             for k, v in data.items():
                 if k.startswith('custom_'):
                     try:
                         _, key = k.split('_', 1)
-                        
                         if key in self.extra_fields:
                             continue       
                         t, i = key.split('_')
@@ -89,7 +90,7 @@ class DynamoForm(DocumentForm):
                             field = f(widget=w(attrs=a))
                         self.fields['custom_%s' % key] = field
                         self.fields['lcustom_%s' % key] = forms.CharField()
-                        #self.extra_fields[k] = (field, forms.CharField())
+                        self.extra_fields[key] = (field, forms.CharField())
                     except (ValueError, KeyError):
                         continue                                          
     
@@ -121,11 +122,14 @@ class DynamoForm(DocumentForm):
                 if value is not None:
                     setattr(self.instance, prop_name, value)
 
-        # fetch extra properties
+        # fetch extra properties 
         extra_properties_dict = {}
+        cleaned_keys = cleaned_data.keys()
+        cleaned_keys.sort()
         for attr_name in cleaned_data.keys():
             if attr_name.startswith('custom_') or \
                     attr_name.startswith('lcustom_'):
+                self.initial[attr_name] = cleaned_data[attr_name]
                 
                 key = attr_name.split('_', 1)[1]
                 if key not in extra_properties_dict.keys():
@@ -142,10 +146,12 @@ class DynamoForm(DocumentForm):
                         "name": DATA_PROPERTIES_MAPPING[t]
                     })                  
                 extra_properties_dict[key] = v
-                     
-        extra_keys = extra_properties_dict.keys()
-        extra_keys.sort()
-        extra_properties = [(k, extra_properties_dict[k]) for k in extra_keys]
+                
+        extra_properties = []
+        for k in self.extra_fields.keys():
+            if k in extra_properties_dict:
+                extra_properties.append((k, extra_properties_dict[k]))
+
         if extra_properties:
             setattr(self.instance, "extra_properties", extra_properties)
 

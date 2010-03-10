@@ -91,6 +91,7 @@ def create_page(request, path):
 def edit_page(request, page):
     msg = None
     if request.POST:
+        page.need_edit = False
         fedit = EditPage(request.POST, auto_id=False, instance=page)
         if fedit.is_valid():
             page = fedit.save()
