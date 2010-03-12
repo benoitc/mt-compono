@@ -69,6 +69,7 @@ class DynamoForm(DocumentForm):
             for name, fields in self.extra_fields.items():              
                 fname = 'custom_%s' % name
                 if data is not None and fname not in data:
+                    # fields have been deleted when editing
                     del self.extra_fields[name]
                     continue
                 f, l = fields   

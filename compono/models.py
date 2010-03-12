@@ -11,8 +11,25 @@ try:
     import simplejson as json
 except ImportError:
     import json
+    
+class DocRev(Document):
+    """ document with revisions """
+    created = DateTimeProperty()
+    updated = DateTimeProperty()
+    
+    def save(self, **params):
+        if not self._rev:
+            self.created = datetime.utcnow()
+        self.updated = datetime.utcnow()
+        super(DocRev, self).save(**params)
+        # add a revision
+        attachment_name = "rev_%s" % self._doc['updated']
+        self.put_attachment(json.dumps(self.to_json()), attachment_name, 
+                        content_type="application/json")
+    
+    
 
-class Page(Document):
+class Page(DocRev):
     title = StringProperty()
     body = StringProperty()
     template = StringProperty()
@@ -22,20 +39,8 @@ class Page(Document):
     urls = StringListProperty()
     need_edit = BooleanProperty(default=True)
     draft = BooleanProperty(default=False)
-    created = DateTimeProperty()
-    updated = DateTimeProperty()
-
-    doc_type = "page"
     
-    def save(self, **params):
-        if not self._rev:
-            self.created = datetime.utcnow()
-        self.updated = datetime.utcnow()
-        super(Page, self).save(**params)
-        # add a revision
-        attachment_name = "rev_%s" % self._doc['updated']
-        self.put_attachment(json.dumps(self.to_json()), attachment_name, 
-                        content_type="application/json")
+    doc_type = "page"
     
     @classmethod    
     def from_path(cls, path):
@@ -49,7 +54,7 @@ class Page(Document):
                     include_docs=True).first()
         
 
-class Type(Document):
+class Type(DocRev):
     title = StringProperty()
     description = StringProperty()
     
