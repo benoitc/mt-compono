@@ -6,6 +6,7 @@
 from __future__ import with_statement
 
 import os
+import urllib
 
 from django.conf import settings
 from django.contrib.auth.models import Group
@@ -15,7 +16,7 @@ from django.template import RequestContext, loader, Context
 from django.core.urlresolvers import reverse
 
 
-from compono.forms import CreatePage, EditPage
+from compono.forms import CreatePage, EditType
 from compono.models import Page, Type
 from compono.permissions import can_create, can_edit
 
@@ -29,8 +30,32 @@ def page_types(request):
     }, context_instance=RequestContext(request))
 
 
-def page_type(request, name):
+def edit_ctx(request, name):
+    raise Http404()
+
+def edit_type(request, name):
     t = Type.by_name(name)
+    msg = None
+    if request.POST:
+        fedit = EditType(request.POST, auto_id=False, instance=t)
+        if fedit.is_valid():
+            t = fedit.save()
+            msg = "Page saved"
+    else:
+        initial = {}
+        if not t.template:
+            default = getattr(settings, 'COMPONO_DEFAULT_TEMPLATE', 
+                            DEFAULT_TEMPLATE)
+
+            with open(default, 'r') as f:
+                initial.update({'template':f.read()})
+        fedit = EditType(initial=initial, auto_id=False, instance=t)
+
+    return render_to_response("types/type.html", {
+        "f": fedit,
+        "msg": msg
+    }, context_instance=RequestContext(request))
+    
     return render_to_response("types/type.html", {
         "t": types
     }, context_instance=RequestContext(request))
@@ -70,15 +95,18 @@ def create_page(request, path):
         if fcreate.is_valid():
             path = fcreate.cleaned_data['path']
             if path.endswith('/'): path = path[:-1]
-            page = Page({
+            pname = fcreate.cleaned_data['name']
+            t = Type({
+                "name": pname,
                 "urls": [path],
                 "editors": fcreate.cleaned_data['editors'],
-                "page_type": fcreate.cleaned_data['page_type'],
                 "need_edit": True
             })
-            page.save()
-            redirect_path = "%s?edit=1&create=1" % reverse('page_handler', 
-                                                        kwargs={"path":path})
+            t.save()
+            if  fcreate.cleaned_data['page_type'] == "type":
+                redirect_path = reverse('edit_type', kwargs={"name":pname})
+            else:
+                redirect_path = reverse('edit_ctx', kwargs={"name":pname})
             return HttpResponseRedirect(redirect_path)
     else:
         fcreate = CreatePage(initial=dict(path=path))
@@ -89,27 +117,7 @@ def create_page(request, path):
     }, context_instance=RequestContext(request))
     
 def edit_page(request, page):
-    msg = None
-    if request.POST:
-        page.need_edit = False
-        fedit = EditPage(request.POST, auto_id=False, instance=page)
-        if fedit.is_valid():
-            page = fedit.save()
-            msg = "Page saved"
-    else:
-        initial = {}
-        if not page.template:
-            default = getattr(settings, 'COMPONO_DEFAULT_TEMPLATE', 
-                            DEFAULT_TEMPLATE)
-
-            with open(default, 'r') as f:
-                initial.update({'template':f.read()})
-        fedit = EditPage(initial=initial, auto_id=False, instance=page)
-
-    return render_to_response("pages/edit_page.html", {
-        "f": fedit,
-        "msg": msg
-    }, context_instance=RequestContext(request))
+    raise Http404()
 
 def show_page(request, page):
     return render_to_response("pages/create_page.html", {

@@ -4,6 +4,8 @@
 # See the NOTICE for more information.
 
 from datetime import datetime
+import urllib
+
 from couchdbkit.ext.django.schema import Document, StringProperty, \
 DateTimeProperty, StringListProperty, BooleanProperty
 
@@ -26,10 +28,10 @@ class DocRev(Document):
         attachment_name = "rev_%s" % self._doc['updated']
         self.put_attachment(json.dumps(self.to_json()), attachment_name, 
                         content_type="application/json")
-    
-    
+        
 
-class Page(DocRev):
+class Type(DocRev):
+    name = StringProperty()
     title = StringProperty()
     body = StringProperty()
     template = StringProperty()
@@ -39,6 +41,24 @@ class Page(DocRev):
     urls = StringListProperty()
     need_edit = BooleanProperty(default=True)
     draft = BooleanProperty(default=False)
+    
+    doc_type = "ctype"
+    
+    @classmethod
+    def all(cls):
+        return cls.view('compono/all_types', include_docs=True)
+        
+    @classmethod
+    def by_name(cls, tname):
+        res = cls.view('compono/ctype_by_name', key=tname, 
+                    include_docs=True).first()
+        print res
+        return res
+        
+
+class Page(DocRev):
+    title = StringProperty()
+    body = StringProperty()
     
     doc_type = "page"
     
@@ -52,18 +72,5 @@ class Page(DocRev):
     def by_type(cls, tname):
         return cls.view("compono/page_by_ctype", key=tname, 
                     include_docs=True).first()
-        
-
-class Type(DocRev):
-    title = StringProperty()
-    description = StringProperty()
     
-    doc_type = "ctype"
-    
-    @classmethod
-    def all(cls):
-        return cls.view('compono/all_types', include_docs=True)
-        
-    @classmethod
-    def by_name(self, tname):
-        return cls.view('compono/ctype_by_name', include_docs=True).first()
+   

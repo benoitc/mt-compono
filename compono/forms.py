@@ -8,7 +8,7 @@ from django import forms
 from django.contrib.auth.models import Group
 
 from compono.dynamo_form import DynamoForm
-from compono.models import Page
+from compono.models import Type
 
 
 FIELD_TYPES = {
@@ -18,9 +18,10 @@ FIELD_TYPES = {
 }
 
 class CreatePage(forms.Form):
+    name = forms.CharField(label="page name")
     path = forms.CharField(widget=forms.HiddenInput)
     page_type = forms.ChoiceField(choices=(
-                    ('page', 'Create a page'),
+                    ('type', 'Create a page type'),
                     ('context', 'Create a context page')
                 ))
     editors = forms.MultipleChoiceField(widget=forms.SelectMultiple(
@@ -31,7 +32,7 @@ class CreatePage(forms.Form):
         self.fields['editors'].choices =  [(g.name, g.name) \
                                                 for g in Group.objects.all()]
                                       
-class EditPage(DynamoForm):
+class EditType(DynamoForm):
     title = forms.CharField(label="Title")
     body = forms.CharField(label="Body", widget=forms.Textarea(
                                                 attrs={'cols':80, 'rows':5,
@@ -41,7 +42,7 @@ class EditPage(DynamoForm):
                                                     'id': 'tpl'}))
                                                 
     class Meta:
-        document = Page
+        document = Type
         exclude = ['page_type', 'groups', 'ctype', 'need_edit','draft',
                     'created', 'updated']
                        
