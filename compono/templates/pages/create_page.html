@@ -13,16 +13,18 @@
 		
 		<form method="post" action=".">
 		  {% csrf_token %}
-		  
-		  
       {{ f.path }}
-			<p>You can now choose to create a new content or a context</p>
-
-			  {{ f.page_type }}
 			<fieldset>
-			  <label for="name">{{ f.name.label }}:</label> {{ f.name }}
-			  <legend>Associate groups of editors to this page</legend>
-			  {{ f.editors }}
+			  <legend>New page type/context</legen>
+			  <p>You can now choose to create a new content or a context</p>
+			  <ul>
+			    <li>{{ f.page_type }}</li>
+			    <li><label for="name">{{ f.name.label }}:</label> {{ f.name }}</li>
+			    <li>
+			      <label for="editors">Associate groups of editors to this page</label><br>
+			      {{ f.editors }}
+			    </li>
+			  </ul>
 			</fieldset>
 			<input type="submit" name="bsubmit" value="Continue">
 		</form>

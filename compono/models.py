@@ -50,7 +50,8 @@ class Type(DocRev):
         
     @classmethod
     def by_name(cls, tname):
-        res = cls.view('compono/ctype_by_name', key=tname, 
+        print tname
+        res = cls.view('compono/ctypes_by_name', key=tname, 
                     include_docs=True).first()
         print res
         return res

@@ -17,8 +17,8 @@ FIELD_TYPES = {
     "Date": (forms.CharField,)
 }
 
-class CreatePage(forms.Form):
-    name = forms.CharField(label="page name")
+class CreatePageType(forms.Form):
+    name = forms.CharField(label="type name")
     path = forms.CharField(widget=forms.HiddenInput)
     page_type = forms.ChoiceField(choices=(
                     ('type', 'Create a page type'),
@@ -28,7 +28,7 @@ class CreatePage(forms.Form):
                                                         attrs={'size': 6}))
     
     def __init__(self, *args, **kwargs):
-        super(CreatePage, self).__init__(*args, **kwargs)
+        super(CreatePageType, self).__init__(*args, **kwargs)
         self.fields['editors'].choices =  [(g.name, g.name) \
                                                 for g in Group.objects.all()]
                                       

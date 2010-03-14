@@ -16,57 +16,16 @@ from django.template import RequestContext, loader, Context
 from django.core.urlresolvers import reverse
 
 
-from compono.forms import CreatePage, EditType
-from compono.models import Page, Type
+from compono.forms import CreatePageType, EditType
+from compono.models import Type
 from compono.permissions import can_create, can_edit
 
-DEFAULT_TEMPLATE = os.path.join(os.path.dirname(__file__), 'templates',
-                                'compono', "default.html")
 
-def page_types(request):
-    types = Type.all()
-    return render_to_response("types/types.html", {
-        "types": types
-    }, context_instance=RequestContext(request))
+from compono.models import Page, Type
 
 
-def edit_ctx(request, name):
-    raise Http404()
-
-def edit_type(request, name):
-    t = Type.by_name(name)
-    msg = None
-    if request.POST:
-        fedit = EditType(request.POST, auto_id=False, instance=t)
-        if fedit.is_valid():
-            t = fedit.save()
-            msg = "Page saved"
-    else:
-        initial = {}
-        if not t.template:
-            default = getattr(settings, 'COMPONO_DEFAULT_TEMPLATE', 
-                            DEFAULT_TEMPLATE)
-
-            with open(default, 'r') as f:
-                initial.update({'template':f.read()})
-        fedit = EditType(initial=initial, auto_id=False, instance=t)
-
-    return render_to_response("types/type.html", {
-        "f": fedit,
-        "msg": msg
-    }, context_instance=RequestContext(request))
-    
-    return render_to_response("types/type.html", {
-        "t": types
-    }, context_instance=RequestContext(request))
-
-def page_by_type(request, tname):
-    pages = Page.by_type(tname)
-    return render_to_response("types/pages.html", {
-        "pages": pages
-    }, context_instance=RequestContext(request))
-                
 def page_handler(request, path=None):
+    """ main page handler """
     if path.endswith('/'): path = path[:-1]
     page = Page.from_path(path)
     if page is None:
@@ -91,7 +50,7 @@ def page_handler(request, path=None):
     
 def create_page(request, path):
     if request.method == "POST":
-        fcreate = CreatePage(request.POST)
+        fcreate = CreatePageType(request.POST)
         if fcreate.is_valid():
             path = fcreate.cleaned_data['path']
             if path.endswith('/'): path = path[:-1]
@@ -109,7 +68,7 @@ def create_page(request, path):
                 redirect_path = reverse('edit_ctx', kwargs={"name":pname})
             return HttpResponseRedirect(redirect_path)
     else:
-        fcreate = CreatePage(initial=dict(path=path))
+        fcreate = CreatePageType(initial=dict(path=path))
     
     return render_to_response("pages/create_page.html", {
         "path": request.path,
