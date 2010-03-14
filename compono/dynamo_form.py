@@ -16,13 +16,13 @@ from compono.models import Page
 EXTRA_PROPERTIES_MAPPING = {
     'Text': (forms.CharField, None, None),
     'LongText': (forms.CharField, forms.Textarea, {'class': 'txt'}),
-    'Date': (forms.CharField, None, {'class': 'date'})
+    'Date': (forms.CharField, forms.TextInput, {'class': 'date'})
 }
 
 DATA_EXTRA_MAPPING = {
     't': (forms.CharField, None, None),
     'ta': (forms.CharField, forms.Textarea, {'class': 'txt'}),
-    'd': (forms.CharField, None, {'class': 'date'})
+    'd': (forms.CharField, forms.TextInput, {'class': 'date'})
 }
 
 DATA_PROPERTIES_MAPPING = {
@@ -37,7 +37,7 @@ class DynamoForm(DocumentForm):
     
     def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None, 
             initial=None, error_class=ErrorList, label_suffix=":",
-            empty_permitted=False, instance=None):
+            empty_permitted=False, instance=None, required=True):
             
         self.extra_fields = SortedDict()
         initial = initial or {}

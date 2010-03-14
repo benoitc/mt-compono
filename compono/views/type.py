@@ -33,7 +33,7 @@ def all_types(request):
         "types": types
     }, context_instance=RequestContext(request))
     
-def edit_type(request, name):
+def edit_type(request, name, path):
     """ Edit a page type """
     
     t = Type.by_name(name)
@@ -55,13 +55,10 @@ def edit_type(request, name):
 
     return render_to_response("types/type.html", {
         "f": fedit,
+        "name": name,
+        "path": path,
         "msg": msg
     }, context_instance=RequestContext(request))
-    
-    return render_to_response("types/type.html", {
-        "t": types
-    }, context_instance=RequestContext(request))
-    
 
-def page_by_type(request, name):
+def pages_by_type(request, name):
     raise Http404()    

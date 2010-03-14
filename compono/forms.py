@@ -33,6 +33,7 @@ class CreatePageType(forms.Form):
                                                 for g in Group.objects.all()]
                                       
 class EditType(DynamoForm):
+    name = forms.CharField(widget=forms.HiddenInput)
     title = forms.CharField(label="Title")
     body = forms.CharField(label="Body", widget=forms.Textarea(
                                                 attrs={'cols':80, 'rows':5,

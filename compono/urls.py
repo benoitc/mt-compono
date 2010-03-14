@@ -7,7 +7,7 @@ import os
 from django.conf import settings
 from django.conf.urls.defaults import patterns, url
 
-from compono.views.type import all_types, edit_type, page_by_type
+from compono.views.type import all_types, edit_type, pages_by_type
 from compono.views.page import page_handler
 
 COMPONO_MEDIA_ROOT = getattr(settings, 'COMPONO_MEDIA_ROOT', 
@@ -25,10 +25,10 @@ else:
     r = url(r'^(?P<path>.*)$', page_handler, name='page_handler')
 
 urlpatterns = patterns('',
-    url(r'^types', all_types, name='all_types'),
-    url(r'^type/(?P<name>.*)$', edit_type, name='edit_type'),
-    url(r'^type/(?P<name>.*)/pages$', page_by_type, name='page_by_types'),
+    url(r'^types/(?P<name>.*)/(?P<path>.*)$', edit_type, name='edit_type'),
+    url(r'^types/(?P<name>.*)$', pages_by_type, name='pages_by_type'),
     
+    url(r'^types', all_types, name='all_types'),
     (r'^%s/(?P<path>.*)$' % COMPONO_MEDIA_URL, 'django.views.static.serve', 
               {'document_root': COMPONO_MEDIA_ROOT}),
     r,

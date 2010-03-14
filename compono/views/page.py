@@ -63,9 +63,11 @@ def create_page(request, path):
             })
             t.save()
             if  fcreate.cleaned_data['page_type'] == "type":
-                redirect_path = reverse('edit_type', kwargs={"name":pname})
+                redirect_path = reverse('edit_type', kwargs=dict(name=pname,
+                                                        path=path))
             else:
-                redirect_path = reverse('edit_ctx', kwargs={"name":pname})
+                redirect_path = reverse('edit_ctx', kwargs=dict(name=pname,
+                                                        path=path))
             return HttpResponseRedirect(redirect_path)
     else:
         fcreate = CreatePageType(initial=dict(path=path))

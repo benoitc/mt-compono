@@ -12,7 +12,8 @@
     <li><a href="#template">Templates</a></li>
   </ul>
   
-  <form id="fedit" action=".?edit=1" method="post" accept-charset="utf-8">
+  <form id="fedit" action="{% url edit_type name=name,path=path %}" method="post" accept-charset="utf-8">
+    {{ f.name }}
     <section id="edit">
       
         <aside id="tools">
