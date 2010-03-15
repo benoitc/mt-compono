@@ -3,7 +3,7 @@
 
 (function($) {
 
-  var template_path = COMPONO_MEDIA_URL + '/templates/';
+  var template_path = MTCOMPONO_MEDIA_URL + '/templates/';
   
   var config = {
     toolbar:

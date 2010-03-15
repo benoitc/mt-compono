@@ -19,7 +19,7 @@ from django.core.urlresolvers import reverse
 from mtcompono.forms import EditType
 from mtcompono.permissions import can_create, can_edit
 
-from cmtompono.models import Type
+from mtcompono.models import Type
 
 
 DEFAULT_TEMPLATE = os.path.join(os.path.dirname(__file__), '..', 'templates',

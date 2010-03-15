@@ -10,10 +10,10 @@ from django.conf.urls.defaults import patterns, url
 from mtcompono.views.type import all_types, edit_type, pages_by_type
 from mtcompono.views.page import page_handler
 
-MTCOMPONO_MEDIA_ROOT = getattr(settings, 'COMPONO_MEDIA_ROOT', 
+MTCOMPONO_MEDIA_ROOT = getattr(settings, 'MTCOMPONO_MEDIA_ROOT', 
                         os.path.join(os.path.dirname(__file__), 'media'))
-MTCOMPONO_MEDIA_URL = getattr(settings, 'COMPONO_MEDIA_URL', 
-                        'media/compono')
+MTCOMPONO_MEDIA_URL = getattr(settings, 'MTCOMPONO_MEDIA_URL', 
+                        'media/mtcompono')
 
 
 if MTCOMPONO_MEDIA_URL.startswith('/'):

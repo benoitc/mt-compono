@@ -46,12 +46,12 @@ class Type(DocRev):
     
     @classmethod
     def all(cls):
-        return cls.view('compono/all_types', include_docs=True)
+        return cls.view('mtcompono/all_types', include_docs=True)
         
     @classmethod
     def by_name(cls, tname):
         print tname
-        res = cls.view('compono/ctypes_by_name', key=tname, 
+        res = cls.view('mtcompono/ctypes_by_name', key=tname, 
                     include_docs=True).first()
         print res
         return res
@@ -65,7 +65,7 @@ class Page(DocRev):
     @classmethod    
     def from_path(cls, path):
         key = path.split('/')
-        res = cls.view("compono/from_path", key=key, include_docs=True).first()
+        res = cls.view("mtcompono/from_path", key=key, include_docs=True).first()
         return res
         
     @classmethod
@@ -82,13 +82,13 @@ class CntPage(Page):
 
     @classmethod
     def by_type(cls, tname):
-        return cls.view("compono/page_by_ctype", key=tname, 
+        return cls.view("mtcompono/page_by_ctype", key=tname, 
                     include_docs=True).first()
                     
     @classmethod
     def from_path():
         key = path.split('/')
-        res = cls.view("compono/cnt_from_path", key=key, 
+        res = cls.view("mtcompono/cnt_from_path", key=key, 
                     include_docs=True).first()
         return res
     
@@ -100,6 +100,6 @@ class Context(Page):
     @classmethod
     def from_path(cls, path):
         key = path.split('/')
-        res = cls.view("compono/ctx_from_path", key=key, 
+        res = cls.view("mtcompono/ctx_from_path", key=key, 
                     include_docs=True).first()
         return res

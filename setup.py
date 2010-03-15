@@ -12,7 +12,7 @@ if not hasattr(sys, 'version_info') or sys.version_info < (2, 5, 0, 'final'):
     raise SystemExit("Compono requires Python 2.5 or later.")
 
 from setuptools import setup, find_packages
-from compono import __version__
+from mtcompono import __version__
 
 data_files = []
 for root in ('compono/_design', 'compono/media', 'compono/templates'):
