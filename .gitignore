@@ -4,6 +4,6 @@
 *.swp
 *.pyo
 .installed.cfg
-compono.egg-info
+mtcompono.egg-info
 dist
 build
