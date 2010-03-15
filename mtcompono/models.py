@@ -58,11 +58,10 @@ class Type(DocRev):
         
 
 class Page(DocRev):
-    title = StringProperty()
-    body = StringProperty()
+    """ a generic mapper for a page """    
     
-    doc_type = "page"
-    
+    urls = StringListProperty()
+   
     @classmethod    
     def from_path(cls, path):
         key = path.split('/')
@@ -70,8 +69,37 @@ class Page(DocRev):
         return res
         
     @classmethod
+    def from_page(cls, page_instance):
+        """ create a page instance from another """
+        obj = cls()
+        obj._doc = page_instance._doc.copy()
+        return obj
+        
+class CntPage(Page):
+    """ a content page """
+        
+    doc_type = "page"       
+
+    @classmethod
     def by_type(cls, tname):
         return cls.view("compono/page_by_ctype", key=tname, 
                     include_docs=True).first()
+                    
+    @classmethod
+    def from_path():
+        key = path.split('/')
+        res = cls.view("compono/cnt_from_path", key=key, 
+                    include_docs=True).first()
+        return res
     
-   
+class Context(Page):
+    """ a context page """
+    
+    doc_type = "context"
+    
+    @classmethod
+    def from_path(cls, path):
+        key = path.split('/')
+        res = cls.view("compono/ctx_from_path", key=key, 
+                    include_docs=True).first()
+        return res

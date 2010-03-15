@@ -7,8 +7,8 @@ from couchdbkit.ext.django.forms import DocumentForm
 from django import forms
 from django.contrib.auth.models import Group
 
-from compono.dynamo_form import DynamoForm
-from compono.models import Type
+from mtcompono.dynamo_form import DynamoForm
+from mtcompono.models import Type
 
 
 FIELD_TYPES = {

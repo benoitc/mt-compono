@@ -11,7 +11,7 @@ from django.utils.datastructures import SortedDict
 from couchdbkit.ext.django.forms import DocumentForm
 
 
-from compono.models import Page
+from mtcompono.models import Page
 
 EXTRA_PROPERTIES_MAPPING = {
     'Text': (forms.CharField, None, None),
@@ -37,7 +37,7 @@ class DynamoForm(DocumentForm):
     
     def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None, 
             initial=None, error_class=ErrorList, label_suffix=":",
-            empty_permitted=False, instance=None, required=True):
+            empty_permitted=False, instance=None):
             
         self.extra_fields = SortedDict()
         initial = initial or {}
@@ -46,7 +46,7 @@ class DynamoForm(DocumentForm):
         
         if instance is not None and hasattr(instance, 'extra_properties'):
             for k, v in instance.extra_properties:
-                f, w, a = EXTRA_PROPERTIES_MAPPING[v['name']]  
+                f, w, a = EXTRA_PROPERTIES_MAPPING[v['name']]
                 if not w:
                     field = f(label=v['label'])
                 else:

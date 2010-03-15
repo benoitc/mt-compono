@@ -16,12 +16,12 @@ from django.template import RequestContext, loader, Context
 from django.core.urlresolvers import reverse
 
 
-from compono.forms import CreatePageType, EditType
-from compono.models import Type
-from compono.permissions import can_create, can_edit
+from mtcompono.forms import CreatePageType, EditType
+from mtcompono.models import Type
+from mtcompono.permissions import can_create, can_edit
 
 
-from compono.models import Page, Type
+from mtcompono.models import Page, Type
 
 
 def page_handler(request, path=None):
@@ -66,8 +66,8 @@ def create_page(request, path):
                 redirect_path = reverse('edit_type', kwargs=dict(name=pname,
                                                         path=path))
             else:
-                redirect_path = reverse('edit_ctx', kwargs=dict(name=pname,
-                                                        path=path))
+                redirect_path = "%s?edit=1" % reverse('page_handler', 
+                                                    kwargs=dict(path=path))
             return HttpResponseRedirect(redirect_path)
     else:
         fcreate = CreatePageType(initial=dict(path=path))
@@ -78,7 +78,29 @@ def create_page(request, path):
     }, context_instance=RequestContext(request))
     
 def edit_page(request, page):
+    if page.doc_type == "page":
+        return edit_cnt(request, page)
+    else:
+        return edit_ctx(request, page)
+        
+def edit_cnt(request, page):
     raise Http404()
+
+def edit_ctx(requuest, page):
+    ctx = CtxPage.from_page(page)
+    if request.method == "POST":
+        fctx = EditContext(request.POST)
+        if fctx.is_valid():
+            ctx.template = fctx.cleaned_data['template']
+            ctx.save()
+    else:
+        
+        fctx = EditContext(initial={'template': ctx.template })
+
+    return render_to_response("pages/edit_context.html", {
+        
+    }, context_instance=RequestContext(request))
+
 
 def show_page(request, page):
     return render_to_response("pages/create_page.html", {

@@ -31,7 +31,7 @@ cmdclass = {'install_data': install_package_data }
 
 
 setup(
-    name = 'compono',
+    name = 'mtcompono',
     version = __version__,
     description = 'Minmialist Django CMS',
     long_description = file(
@@ -43,7 +43,7 @@ setup(
     author = 'Benoit Chesneau',
     author_email = 'benoitc@e-engura.org',
     license = 'BSD',
-    url = 'http://github.com/benoitc/compono',
+    url = 'http://github.com/benoitc/mt-compono',
     classifiers = [
         'License :: OSI Approved :: Apache Software License',
         'Intended Audience :: Developers',

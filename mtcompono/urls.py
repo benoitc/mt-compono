@@ -7,17 +7,17 @@ import os
 from django.conf import settings
 from django.conf.urls.defaults import patterns, url
 
-from compono.views.type import all_types, edit_type, pages_by_type
-from compono.views.page import page_handler
+from mtcompono.views.type import all_types, edit_type, pages_by_type
+from mtcompono.views.page import page_handler
 
-COMPONO_MEDIA_ROOT = getattr(settings, 'COMPONO_MEDIA_ROOT', 
+MTCOMPONO_MEDIA_ROOT = getattr(settings, 'COMPONO_MEDIA_ROOT', 
                         os.path.join(os.path.dirname(__file__), 'media'))
-COMPONO_MEDIA_URL = getattr(settings, 'COMPONO_MEDIA_URL', 
+MTCOMPONO_MEDIA_URL = getattr(settings, 'COMPONO_MEDIA_URL', 
                         'media/compono')
 
 
-if COMPONO_MEDIA_URL.startswith('/'):
-    COMPONO_MEDIA_URL = COMPONO_MEDIA_URL[1:]
+if MTCOMPONO_MEDIA_URL.startswith('/'):
+    MTCOMPONO_MEDIA_URL = COMPONO_MEDIA_URL[1:]
 
 if settings.APPEND_SLASH:
     r = url(r'^(?P<path>.*)/$', page_handler, name='page_handler')
@@ -29,7 +29,7 @@ urlpatterns = patterns('',
     url(r'^types/(?P<name>.*)$', pages_by_type, name='pages_by_type'),
     
     url(r'^types', all_types, name='all_types'),
-    (r'^%s/(?P<path>.*)$' % COMPONO_MEDIA_URL, 'django.views.static.serve', 
-              {'document_root': COMPONO_MEDIA_ROOT}),
+    (r'^%s/(?P<path>.*)$' % MTCOMPONO_MEDIA_URL, 'django.views.static.serve', 
+              {'document_root': MTCOMPONO_MEDIA_ROOT}),
     r,
 )

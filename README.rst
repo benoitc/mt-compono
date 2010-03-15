@@ -1,5 +1,5 @@
-Compono
--------
+mt-compono
+----------
 
 Minimalist content management system written for `La Mediatheque <http://www.lamediatheque.be>`_.
 
@@ -40,41 +40,41 @@ Installation of Compono
 
 Install from sources::
 
-  $ git clone git@github.com:benoitc/compono
+  $ git clone git@github.com:benoitc/mt-compono
   $ python setup.py install
 
 Configure your Django Project
 -----------------------------
 
 Here we will show what to edit in your settings file. First you need to add
-`compono` and `couchdbkit` to your lists of applications::
+`mt-compono` and `couchdbkit` to your lists of applications::
 
   INSTALLED_APPS = (
       ...
       'couchdbkit.ext.django',
-      'compono',
+      'mtcompono',
   )
   
 And allow register the CouchDB database associated::
 
   COUCHDB_DATABASES = (
-       ('compono', "http://127.0.0.1:5984/yourdb"),
+       ('mtcompono', "http://127.0.0.1:5984/yourdb"),
   )
 
 Then Edit your main `urls.py` file and add it to your pattern::
 
   urlpatterns = pattern('',
       ...
-      url('^', include('compono.urls')),
+      url('^', include('mtcompono.urls')),
   )
 
 that's it.
 
-Compono media path
-------------------
+mtcompono media path
+--------------------
 
-If you want to serve compono media (needed for its admin), copy the `compono/media` folder where you want. You can even customize url by setting `COMPONO_MEDIA_URL` in your settings file::
+If you want to serve mt-compono media (needed for its admin), copy the `mtcompono/media` folder where you want. You can even customize url by setting `MTCOMPONO_MEDIA_URL` in your settings file::
 
-  COMPONO_MEDIA_URL = '/media/compono' # without trailing slash
+  MTCOMPONO_MEDIA_URL = '/media/mtcompono' # without trailing slash
   
-In development you can configure the media root by settings `COMPONO_MEDIA_ROOT`, but it's generally not needed.
+In development you can configure the media root by settings `MTCOMPONO_MEDIA_ROOT`, but it's generally not needed.

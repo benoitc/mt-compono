@@ -18,8 +18,8 @@ def compono_media_url():
     except ImportError:
         return ''
     
-    COMPONO_MEDIA_URL = getattr(settings, 'COMPONO_MEDIA_URL', 
-                            '/media/compono')
+    MTCOMPONO_MEDIA_URL = getattr(settings, 'COMPONO_MEDIA_URL', 
+                            '/media/mtcompono')
                                                   
-    return iri_to_uri(COMPONO_MEDIA_URL)
-compono_media_url = register.simple_tag(compono_media_url)
+    return iri_to_uri(MTCOMPONO_MEDIA_URL)
+mtcompono_media_url = register.simple_tag(mtcompono_media_url)

@@ -16,14 +16,14 @@ from django.template import RequestContext, loader, Context
 from django.core.urlresolvers import reverse
 
 
-from compono.forms import EditType
-from compono.permissions import can_create, can_edit
+from mtcompono.forms import EditType
+from mtcompono.permissions import can_create, can_edit
 
-from compono.models import Type
+from cmtompono.models import Type
 
 
 DEFAULT_TEMPLATE = os.path.join(os.path.dirname(__file__), '..', 'templates',
-                                'compono', "default.html")
+                                'mtcompono', "default.html")
 
 def all_types(request):
     """ list all types """
