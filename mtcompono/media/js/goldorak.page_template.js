@@ -8,17 +8,19 @@ $(function() {
   });
   
   function escapeHTML(st) {
-   return(
-   st && st.replace(/&/g,'&amp;').
-   replace(/>/g,'&gt;').
-   replace(/</g,'&lt;').
-   replace(/"/g,'&quot;')
-   );
+    return(
+      st && st.replace(/&/g,'&amp;').
+      replace(/>/g,'&gt;').
+      replace(/</g,'&lt;').
+      replace(/"/g,'&quot;')
+    );
   };
   
   function unescaperHTML(s) {
     return (
-      s && s.replace(/&amp;/g, '&').
+      s && s.replace(/&#(\d+);/g, function(wm, pmatch){
+        return String.fromCharCode(+pmatch);
+      }).replace(/&amp;/g, '&').
       replace(/&gt;/g, '>').
       replace(/&lt;/g, '<').
       replace(/&quot;/g, '"')

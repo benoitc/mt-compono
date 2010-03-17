@@ -32,7 +32,7 @@ class TemplateWidget(forms.Widget):
             
         values = dict([(k, escape(value[k])) for k in value.keys()])
         html = [
-            '<script>var TEMPLATES=%s;</script>' % json.dumps(values),
+            '<script>var TEMPLATES=%s;</script>' % json.dumps(values, indent=2),
             '<select id="editTemplate">',
             '<option value="-">Choose an existing template to edit</option>'
         ]
