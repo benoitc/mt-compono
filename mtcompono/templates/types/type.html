@@ -1,5 +1,8 @@
 {% extends "mtcompono/base.html" %}
+{% load i18n %}
 {% load mtcomponomedia %}
+
+
 
 {% block extrahead %}
   <link rel="stylesheet" href="{% mtcompono_media_url %}/css/xmlcolors.css" type="text/css" media="screen, projection" />
@@ -62,7 +65,6 @@
   <script>
     var MTCOMPONO_MEDIA_URL = "{% mtcompono_media_url %}";
   </script>
-  <script type="text/javascript" src="{% mtcompono_media_url %}/js/codemirror/codemirror.js"></script>
 	<script type="text/javascript" src="{% mtcompono_media_url %}/js/ckeditor/ckeditor.js"></script>
 	<script type="text/javascript" src="{% mtcompono_media_url %}/js/ckeditor/adapters/jquery.js"></script>
 	<script type="text/javascript" src="{% mtcompono_media_url %}/js/goldorak.page.js"></script>
@@ -74,14 +76,8 @@
 	      
 	      new $.goldorak.createPage();
 	      
-	      new CodeMirror.fromTextArea("tpl",  {
-          parserfile: "parsexml.js",
-          stylesheet: MTCOMPONO_MEDIA_URL +"/css/xmlcolors.css",
-          path: MTCOMPONO_MEDIA_URL + "/js/codemirror/",
-          height: "450px"
-
-        });
-    		$("input:submit").button();
+	      
+    	  $("input:submit").button();
     	});
 	</script>
 	

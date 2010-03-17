@@ -9,6 +9,7 @@ from django.contrib.auth.models import Group
 
 from mtcompono.dynamo_form import DynamoForm
 from mtcompono.models import Type
+from mtcompono.widgets import TemplateWidget
 
 
 FIELD_TYPES = {
@@ -39,8 +40,8 @@ class EditType(DynamoForm):
                                                 attrs={'cols':80, 'rows':5,
                                                         'id': "body"}))
     template = forms.CharField(label="Template", required=False,
-                        widget=forms.Textarea(attrs={'cols':100, 'rows':20,
-                                                    'id': 'tpl'}))
+                        widget=TemplateWidget(attrs={'cols':100, 
+                                                'rows':20}))
                                                 
     class Meta:
         document = Type

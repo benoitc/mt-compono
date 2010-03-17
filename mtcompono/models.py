@@ -7,7 +7,7 @@ from datetime import datetime
 import urllib
 
 from couchdbkit.ext.django.schema import Document, StringProperty, \
-DateTimeProperty, StringListProperty, BooleanProperty
+DateTimeProperty, StringListProperty, BooleanProperty, DictProperty
 
 try:
     import simplejson as json
@@ -34,13 +34,12 @@ class Type(DocRev):
     name = StringProperty()
     title = StringProperty()
     body = StringProperty()
-    template = StringProperty()
-    page_type = StringProperty(default="page")
+    templates = DictProperty()
+    
     groups = StringListProperty()
     ctype = StringProperty()
     urls = StringListProperty()
-    need_edit = BooleanProperty(default=True)
-    draft = BooleanProperty(default=False)
+    
     
     doc_type = "ctype"
     
@@ -50,10 +49,8 @@ class Type(DocRev):
         
     @classmethod
     def by_name(cls, tname):
-        print tname
         res = cls.view('mtcompono/ctypes_by_name', key=tname, 
                     include_docs=True).first()
-        print res
         return res
         
 
@@ -61,6 +58,9 @@ class Page(DocRev):
     """ a generic mapper for a page """    
     
     urls = StringListProperty()
+    need_edit = BooleanProperty(default=True)
+    draft = BooleanProperty(default=False)
+    
    
     @classmethod    
     def from_path(cls, path):
