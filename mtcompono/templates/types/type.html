@@ -69,12 +69,13 @@
 	<script type="text/javascript" src="{% mtcompono_media_url %}/js/ckeditor/adapters/jquery.js"></script>
 	<script type="text/javascript" src="{% mtcompono_media_url %}/js/goldorak.page.js"></script>
 	
-	
+	{{ f.media }}
 	<script>
 	  
 	  $(function() {
 	      
 	      new $.goldorak.createPage();
+	      
 	      
 	      
     	  $("input:submit").button();

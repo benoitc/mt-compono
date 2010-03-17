@@ -6,6 +6,7 @@
 from django.conf import settings
 from django import forms
 from django.utils.safestring import mark_safe
+from django.forms.util import flatatt
 
 try:
     import simplejson as json
@@ -20,19 +21,25 @@ class TemplateWidget(forms.Widget):
     needs_multipart_form = True
     
     class Media:
-        js = (MTCOMPONO_MEDIA_URL + "js/codemirror/codemirror.js",
-              MTCOMPONO_MEDIA_URL + "js/goldorak.page_template.js")
+        js = (MTCOMPONO_MEDIA_URL + "/js/codemirror/codemirror.js",
+              MTCOMPONO_MEDIA_URL + "/js/goldorak.page_template.js")
     
     def render(self, name, value, attrs=None):
         if value is None: value = {}
         
-        html = []
-        html.append('<script>var templates=%s;</script>' % json.dumps(value))
-        html.append('<select name="tname">')
+        if "id" in attrs:
+            del attrs['id']
+        
+        html = [
+            '<script>var templates=%s;</script>' % json.dumps(value),
+            '<select name="tname">',
+            '<option value="-">Choose an existing template to edit</option>'
+        ]
         for k in value.keys():
             html.append('<option value="%(key)s">%(key)s</option>' % {"key": k})
         
         html.append('</select>')
-        html.append('<textarea id="tpl"></textarea>')
+        html.append('<a href="#" id="createTemplate">Create a new template</a>')
+        html.append('<textarea id="tpl"%s></textarea>' % flatatt(attrs))
         
         return mark_safe(u'\n'.join(html))
