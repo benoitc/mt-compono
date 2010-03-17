@@ -3,11 +3,15 @@
 # This file is part of compono released under the Apache 2 license. 
 # See the NOTICE for more information.
 
-from couchdbkit.ext.django.forms import DocumentForm
 from django import forms
 from django.contrib.auth.models import Group
 
-from mtcompono.dynamo_form import DynamoForm
+try:
+    import simplejson as json
+except ImportError:
+    from django.utils import simplejson as json
+
+from mtcompono.dynamo_form import DynamoForm, TemplateField
 from mtcompono.models import Type
 from mtcompono.widgets import TemplateWidget
 
@@ -18,6 +22,7 @@ FIELD_TYPES = {
     "Date": (forms.CharField,)
 }
 
+        
 class CreatePageType(forms.Form):
     name = forms.CharField(label="type name")
     path = forms.CharField(widget=forms.HiddenInput)
@@ -39,7 +44,7 @@ class EditType(DynamoForm):
     body = forms.CharField(label="Body", widget=forms.Textarea(
                                                 attrs={'cols':80, 'rows':5,
                                                         'id': "body"}))
-    template = forms.CharField(label="Template", required=False,
+    templates = TemplateField(label="Template", required=False,
                         widget=TemplateWidget(attrs={'cols':100, 
                                                 'rows':20}))
                                                 

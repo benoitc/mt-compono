@@ -7,6 +7,7 @@ from django.conf import settings
 from django import forms
 from django.utils.safestring import mark_safe
 from django.forms.util import flatatt
+from django.utils.html import escape
 
 try:
     import simplejson as json
@@ -26,13 +27,13 @@ class TemplateWidget(forms.Widget):
     
     def render(self, name, value, attrs=None):
         if value is None: value = {}
-        
         if "id" in attrs:
             del attrs['id']
-        
+            
+        values = dict([(k, escape(value[k])) for k in value.keys()])
         html = [
-            '<script>var templates=%s;</script>' % json.dumps(value),
-            '<select name="tname">',
+            '<script>var TEMPLATES=%s;</script>' % json.dumps(values),
+            '<select id="editTemplate">',
             '<option value="-">Choose an existing template to edit</option>'
         ]
         for k in value.keys():

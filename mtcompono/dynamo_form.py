@@ -8,8 +8,26 @@ from django.forms.forms import BaseForm, get_declared_fields, BoundField
 from django import forms
 from django.utils.datastructures import SortedDict
 
-from couchdbkit.ext.django.forms import DocumentForm
 
+
+from mtcompono.widgets import TemplateWidget
+
+class TemplateField(forms.Field):
+    widget = TemplateWidget
+
+
+_patched_ext = False
+def patch_ext():
+    global _patched_ext
+    if _patched_ext:
+        return
+    from couchdbkit.ext.django.forms import FIELDS_PROPERTES_MAPPING
+    FIELDS_PROPERTES_MAPPING.update({"DictProperty": TemplateField})
+    _patched_ext = True
+    
+patch_ext()
+    
+from couchdbkit.ext.django.forms import DocumentForm
 
 from mtcompono.models import Page
 
@@ -63,7 +81,8 @@ class DynamoForm(DocumentForm):
         super(DynamoForm, self).__init__(data=data, files=files, 
                     auto_id=auto_id, prefix=prefix, initial=object_data, 
                     error_class=error_class, label_suffix=label_suffix,
-                    empty_permitted=empty_permitted, instance=instance)        
+                    empty_permitted=empty_permitted, instance=instance)   
+                    
         
         if self.extra_fields:
             for name, fields in self.extra_fields.items():              

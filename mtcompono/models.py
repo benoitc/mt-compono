@@ -40,7 +40,6 @@ class Type(DocRev):
     ctype = StringProperty()
     urls = StringListProperty()
     
-    
     doc_type = "ctype"
     
     @classmethod

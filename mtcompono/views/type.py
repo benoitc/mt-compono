@@ -45,12 +45,13 @@ def edit_type(request, name, path):
             msg = "Page saved"
     else:
         initial = {}
-        """if not t.templates:
+        if not t.templates:
             default = getattr(settings, 'COMPONO_DEFAULT_TEMPLATE', 
                             DEFAULT_TEMPLATE)
 
             with open(default, 'r') as f:
-                initial.update({'template':f.read()})"""
+                tpl = f.read()
+                initial['templates'] = { "show": tpl, "list": tpl }
         fedit = EditType(initial=initial, auto_id=False, instance=t)
 
     return render_to_response("types/type.html", {
