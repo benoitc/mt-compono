@@ -33,7 +33,6 @@ class TemplateWidget(forms.Widget):
         if "id" in attrs:
             del attrs['id']
             
-        print value
         values = dict([(k, escape(value[k])) for k in value.keys()])
         html = [
             '<script>var TEMPLATES=%s;</script>' % json.dumps(values, indent=2),
