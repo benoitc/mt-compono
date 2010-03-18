@@ -17,7 +17,7 @@ MTCOMPONO_MEDIA_URL = getattr(settings, 'MTCOMPONO_MEDIA_URL',
 
 
 if MTCOMPONO_MEDIA_URL.startswith('/'):
-    MTCOMPONO_MEDIA_URL = COMPONO_MEDIA_URL[1:]
+    MTCOMPONO_MEDIA_URL = MTCOMPONO_MEDIA_URL[1:]
 
 if settings.APPEND_SLASH:
     r = url(r'^(?P<path>.*)/$', page_handler, name='page_handler')
