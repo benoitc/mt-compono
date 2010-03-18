@@ -56,4 +56,3 @@ class TemplateWidget(forms.Widget):
         if isinstance(d, dict):
             return d
         return json.loads(base64.b64decode(d))
-            

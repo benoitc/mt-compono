@@ -12,7 +12,7 @@ DateTimeProperty, StringListProperty, BooleanProperty, DictProperty
 try:
     import simplejson as json
 except ImportError:
-    import json
+    from django.utils import simplejson as json
     
 class DocRev(Document):
     """ document with revisions """

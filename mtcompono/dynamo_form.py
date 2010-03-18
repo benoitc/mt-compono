@@ -21,7 +21,6 @@ class TemplateField(forms.Field):
     widget = TemplateWidget
     
 
-
 _patched_ext = False
 def patch_ext():
     global _patched_ext
