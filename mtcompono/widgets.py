@@ -3,6 +3,8 @@
 # This file is part of compono released under the Apache 2 license. 
 # See the NOTICE for more information.
 
+import base64
+
 from django.conf import settings
 from django import forms
 from django.utils.safestring import mark_safe
@@ -22,7 +24,8 @@ class TemplateWidget(forms.Widget):
     needs_multipart_form = True
     
     class Media:
-        js = (MTCOMPONO_MEDIA_URL + "/js/codemirror/codemirror.js",
+        js = (MTCOMPONO_MEDIA_URL + "/js/jquery.base64.js",
+              MTCOMPONO_MEDIA_URL + "/js/codemirror/codemirror.js",
               MTCOMPONO_MEDIA_URL + "/js/goldorak.page_template.js")
     
     def render(self, name, value, attrs=None):
@@ -30,6 +33,7 @@ class TemplateWidget(forms.Widget):
         if "id" in attrs:
             del attrs['id']
             
+        print value
         values = dict([(k, escape(value[k])) for k in value.keys()])
         html = [
             '<script>var TEMPLATES=%s;</script>' % json.dumps(values, indent=2),
@@ -44,3 +48,13 @@ class TemplateWidget(forms.Widget):
         html.append('<textarea id="tpl"%s></textarea>' % flatatt(attrs))
         
         return mark_safe(u'\n'.join(html))
+        
+    def value_from_datadict(self, data, files, name):
+        "File widgets take data from FILES, not POST"
+        d =  data.get(name, None)
+        if not d:
+            return {}
+        if isinstance(d, dict):
+            return d
+        return json.loads(base64.b64decode(d))
+            

@@ -3,17 +3,23 @@
 # This file is part of compono released under the Apache 2 license. 
 # See the NOTICE for more information.
 
+import base64
+
 from django.forms.util import ValidationError, ErrorList
 from django.forms.forms import BaseForm, get_declared_fields, BoundField
 from django import forms
 from django.utils.datastructures import SortedDict
 
-
+try:
+    import simplejson as json
+except ImportError:
+    from django.utils import simplejson as json
 
 from mtcompono.widgets import TemplateWidget
 
 class TemplateField(forms.Field):
     widget = TemplateWidget
+    
 
 
 _patched_ext = False

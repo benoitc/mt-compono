@@ -28,9 +28,29 @@ $(function() {
     
   }
   
+  var current_template = "";
+  
   $("#editTemplate").change(function(e) {
+    if (current_template != "") {
+      TEMPLATES[current_template] = escapeHTML(cde.getCode());
+    }
+    
     var tname = $("#editTemplate").val();
+    current_template = tname;
     cde.setCode(unescaperHTML(TEMPLATES[tname]));
   })
+  
+  $("#editTemplate").parents("form").submit(function() {
+    if (current_template != "") {
+      TEMPLATES[current_template] = escapeHTML(cde.getCode());
+    }
+    
+    var templates_str = $.base64.encode(JSON.stringify(TEMPLATES));
+    
+    $(this).append('<input type="hidden" name="templates" value="'+
+      templates_str + '">');
+    
+  });
+  
   
 });
