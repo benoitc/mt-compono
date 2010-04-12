@@ -6,55 +6,60 @@
 
 {% block extrahead %}
   <link rel="stylesheet" href="{% mtcompono_media_url %}/css/xmlcolors.css" type="text/css" media="screen, projection" />
+  <link rel="stylesheet" href="{% mtcompono_media_url %}/css/ui.multiselect.css" type="text/css" media="screen, projection" />
 {% endblock %}
 
 {% block content %}
+<h1>Edit type</h1>
 <div id="tabs">
   <ul>
-    <li><a href="#edit">Content</a></li>
+    <li><a href="#settings">Settings</a></li>
+    <li><a href="#defineProperties">Define type properties</a></li>
     <li><a href="#template">Templates</a></li>
   </ul>
   
-  <form id="fedit" action="{% url edit_type name=name,path=path %}" method="post" accept-charset="utf-8">
-    {{ f.name }}
-    <section id="edit">
+  <form id="fedit" action="." method="post" accept-charset="utf-8">
+    {% csrf_token %}
+    <section id="settings">
       
+        <h2>Edit type settings</h2>
+         <p><label for="name">Name of type: </label><input type="text" name="name" id="name" value=""></p>
+         <p><label for="editors">Associate groups of editors to this page:</label><br><select id="editors" name="editors" size="5" multiple="multiple" class="multiselect">
+         {% for e in editors %}
+            <option name="{{ e.name }}">{{ e.name }}</option>
+         {% endfor %}
+        </select></p>
+      
+        <p><input class="submit" type="submit" value="Save"></p>
+    </section>
+    
+    <section id="defineProperties">
         <aside id="tools">
           <h2>FieldsTypes:</h2>
           <ul id="fieldsTypes"></ul>
         </aside>
-      
-        <div id="cedit">
-            {% csrf_token %}
-            {% if f.errors %}
-                <p class="error">{{ f.errors }}</p>
-            {% endif %}
-            {{ f.page_id }}
-              <h2>Edit page</h2>
-              <p><label for="id_title"> {{ f.title.label }}</label>{{ f.title }}</p>
-              <label for="id_body">{{ f.body.label }}</label><br>
-              {{ f.body }}
-
-            <fieldset id="custom_fields" class="">
-              <legend>Custom fields</legend>
-              
-              {% if f.extra_fields %}
-              
-              {% for custom, lcustom in f.extra_properties %}
-                  <p class="custom">{{ lcustom }} {{ custom }} <a class="delete" href="#">delete</a></p>
-              {% endfor %}
-                
-              {% endif %}
-              
-            </fieldset>
-            <p><input class="submit" type="submit" value="Save"></p>
+         
+         <div id="cedit">
+             <h2>Define type properties</h2>
+             <div id="properties"></div>
         </div>
+        <p><input class="submit" type="submit" value="Save"></p>
     </section>
 
     <section id="template">
-      <h2>Edit the template</h2>
-      {{ f.templates }}
-       <p><input class="submit" type="submit" value="Save"></p>
+      <h2>Edit the templates</h2>
+      
+      <select id="templates" name="templates">
+          <option value="-">Choose an existing template to edit</option>
+          <option value="show" selected="selected">Show</option>
+          <option value="list">List</option>
+      </select>
+      
+      <textarea name="tpl" id="tpl"></textarea>
+      <input type="hidden" name="tpl_show" id="tpl_show" value="">
+      <input type="hidden" name="tpl_list" id="tpl_list" value="">
+      
+      <p><input class="submit" type="submit" value="Save"><input class="submit" type="submit" value="Empty current template" id="bempty"></p>
     </section>
   </form>
   
@@ -65,20 +70,31 @@
   <script>
     var MTCOMPONO_MEDIA_URL = "{% mtcompono_media_url %}";
   </script>
+    <script type="text/javascript" src="{% mtcompono_media_url %}/js/codemirror/codemirror.js"></script>
 	<script type="text/javascript" src="{% mtcompono_media_url %}/js/ckeditor/ckeditor.js"></script>
 	<script type="text/javascript" src="{% mtcompono_media_url %}/js/ckeditor/adapters/jquery.js"></script>
-	<script type="text/javascript" src="{% mtcompono_media_url %}/js/goldorak.page.js"></script>
+	<script type="text/javascript" src="{% mtcompono_media_url %}/js/plugins/localisation/jquery.localisation-min.js"></script>
+    <script type="text/javascript" src="{% mtcompono_media_url %}/js/plugins/scrollTo/jquery.scrollTo-min.js"></script>
+    <script type="text/javascript" src="{% mtcompono_media_url %}/js/ui.multiselect.js"></script>
+
+    <script type="text/javascript" src="{% mtcompono_media_url %}/js/compono.js"></script>
+	<script type="text/javascript" src="{% mtcompono_media_url %}/js/compono.type.js"></script>
 	
-	{{ f.media }}
+	
 	<script>
 	  
 	  $(function() {
+	      new $.compono.createType({
+	          path: "{% mtcompono_media_url %}/js/",
+	          medi_path: "{% mtcompono_media_url %}",
+	          properties: ["text", "textarea", "datetime"],
+	          doc: JSON.parse('{{ doc|safe|escapejs }}')
+	      });
 	      
-	      new $.goldorak.createPage();
-	      
-	      
-	      
-    	  $("input:submit").button();
+	      /*$.localise('ui-multiselect', {
+	          path:   '{% mtcompono_media_url %}/js/locale/'
+	      });*/
+		  $(".multiselect").multiselect();
     	});
 	</script>
 	

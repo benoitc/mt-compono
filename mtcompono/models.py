@@ -7,7 +7,8 @@ from datetime import datetime
 import urllib
 
 from couchdbkit.ext.django.schema import Document, StringProperty, \
-DateTimeProperty, StringListProperty, BooleanProperty, DictProperty
+DateTimeProperty, StringListProperty, BooleanProperty, DictProperty, \
+ListProperty
 
 try:
     import simplejson as json
@@ -20,17 +21,47 @@ class DocRev(Document):
     updated = DateTimeProperty()
     
     def save(self, **params):
+        print self.properties()
+        self.created = datetime.utcnow()
+        
         if not self._rev:
             self.created = datetime.utcnow()
+        print "mmmm"
         self.updated = datetime.utcnow()
+        
+        print "la"
         super(DocRev, self).save(**params)
+        
         # add a revision
         attachment_name = "rev_%s" % self._doc['updated']
         self.put_attachment(json.dumps(self.to_json()), attachment_name, 
                         content_type="application/json")
-        
-
+                        
+                        
 class Type(DocRev):
+    name = StringProperty()
+    props = ListProperty()
+    templates = DictProperty()
+    
+    doc_type = "ctype"
+    
+    @classmethod
+    def all(cls):
+        return cls.view('mtcompono/all_ctypes', include_docs=True)
+        
+    @classmethod
+    def by_name(cls, name):
+        return cls.view('mtcompono/ctypes_by_name', key=name, 
+                        include_docs=True).one()
+                        
+    @classmethod
+    def is_exists(cls, name):
+        # we should do an HEAD here.
+        if cls.by_name(name):
+            return True
+        return False
+
+class Page(DocRev):
     name = StringProperty()
     title = StringProperty()
     body = StringProperty()
@@ -39,6 +70,8 @@ class Type(DocRev):
     groups = StringListProperty()
     ctype = StringProperty()
     urls = StringListProperty()
+    need_edit = BooleanProperty(default=True)
+    draft = BooleanProperty(default=False)
     
     doc_type = "ctype"
     
@@ -52,19 +85,11 @@ class Type(DocRev):
                     include_docs=True).first()
         return res
         
-
-class Page(DocRev):
-    """ a generic mapper for a page """    
-    
-    urls = StringListProperty()
-    need_edit = BooleanProperty(default=True)
-    draft = BooleanProperty(default=False)
-    
-   
     @classmethod    
     def from_path(cls, path):
         key = path.split('/')
-        res = cls.view("mtcompono/from_path", key=key, include_docs=True).first()
+        res = cls.view("mtcompono/from_path", key=key, 
+                    include_docs=True).first()
         return res
         
     @classmethod
@@ -73,6 +98,7 @@ class Page(DocRev):
         obj = cls()
         obj._doc = page_instance._doc.copy()
         return obj
+
         
 class CntPage(Page):
     """ a content page """

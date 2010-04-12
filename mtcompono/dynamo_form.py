@@ -134,7 +134,6 @@ class DynamoForm(DocumentForm):
         database. Returns ``instance``.
         """
         
-        print "cleaned_data %s " % str(self.cleaned_data.items())
         opts = self._meta
         cleaned_data = self.cleaned_data.copy()
         for prop_name in self.instance._doc.keys():

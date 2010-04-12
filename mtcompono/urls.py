@@ -20,16 +20,17 @@ if MTCOMPONO_MEDIA_URL.startswith('/'):
     MTCOMPONO_MEDIA_URL = MTCOMPONO_MEDIA_URL[1:]
 
 if settings.APPEND_SLASH:
-    r = url(r'^(?P<path>.*)/$', page_handler, name='page_handler')
+    unknown = url(r'^(?P<path>.*)/$', page_handler, name='page_handler')
 else:
-    r = url(r'^(?P<path>.*)$', page_handler, name='page_handler')
+    unknown = url(r'^(?P<path>.*)$', page_handler, name='page_handler')
 
 urlpatterns = patterns('',
-    url(r'^types/(?P<name>.*)/(?P<path>.*)$', edit_type, name='edit_type'),
-    url(r'^types/(?P<name>.*)$', pages_by_type, name='pages_by_type'),
+    url(r'^types$', all_types, name='all_types'),
+    url(r'^type/(?P<typeid>.*)$', edit_type, name='edit_type'),
+    url(r'^type$', edit_type, name='edit_type'),
+
     
-    url(r'^types', all_types, name='all_types'),
     (r'^%s/(?P<path>.*)$' % MTCOMPONO_MEDIA_URL, 'django.views.static.serve', 
               {'document_root': MTCOMPONO_MEDIA_ROOT}),
-    r,
+    unknown,
 )

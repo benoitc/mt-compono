@@ -12,7 +12,7 @@ except ImportError:
     from django.utils import simplejson as json
 
 from mtcompono.dynamo_form import DynamoForm, TemplateField
-from mtcompono.models import Type
+from mtcompono.models import Page
 from mtcompono.widgets import TemplateWidget
 
 
@@ -22,7 +22,7 @@ FIELD_TYPES = {
     "Date": (forms.CharField,)
 }
 
-        
+                
 class CreatePageType(forms.Form):
     name = forms.CharField(label="type name")
     path = forms.CharField(widget=forms.HiddenInput)
@@ -49,7 +49,7 @@ class EditType(DynamoForm):
                                                 'rows':20}))
                                                 
     class Meta:
-        document = Type
+        document = Page
         exclude = ['page_type', 'groups', 'ctype', 'need_edit','draft',
                     'created', 'updated']
                        

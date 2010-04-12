@@ -15,9 +15,8 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
 from django.core.urlresolvers import reverse
 
-
 from mtcompono.forms import CreatePageType, EditType
-from mtcompono.models import Type
+from mtcompono.models import Page
 from mtcompono.permissions import can_create, can_edit
 
 
@@ -55,16 +54,17 @@ def create_page(request, path):
             path = fcreate.cleaned_data['path']
             if path.endswith('/'): path = path[:-1]
             pname = fcreate.cleaned_data['name']
-            t = Type({
+            p = Page({
                 "name": pname,
                 "urls": [path],
                 "editors": fcreate.cleaned_data['editors'],
                 "need_edit": True
             })
-            t.save()
+            p.save()
             if  fcreate.cleaned_data['page_type'] == "type":
                 redirect_path = reverse('edit_type', kwargs=dict(name=pname,
                                                         path=path))
+
             else:
                 redirect_path = "%s?edit=1" % reverse('page_handler', 
                                                     kwargs=dict(path=path))

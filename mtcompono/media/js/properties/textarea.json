@@ -1,0 +1,6 @@
+{
+  "id": "ta",
+  "name": "textarea",
+  "label": "Long Text input",
+  "propertyName": "LongText"
+}
