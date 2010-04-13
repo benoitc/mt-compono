@@ -39,7 +39,25 @@ class CreatePageType(forms.Form):
         choices += [(t._id, t.name) for t in Type.all()]
         
         self.fields['page_type'].choices =choices
-                                      
+        
+class EditContext(forms.Form):
+    title = forms.CharField(max_length=255)
+    body = forms.CharField(label="Body", widget=forms.Textarea(
+                                                attrs={'cols':80, 'rows':5,
+                                                        'id': "body"}))
+    editors = forms.MultipleChoiceField(
+        label="Associate groups of editors to this page:",
+        widget=forms.SelectMultiple(attrs={'size': 5, 'class': "multiselect"})
+    )
+    
+    def __init__(self, *args, **kwargs):
+        super(EditContext, self).__init__(*args, **kwargs)
+        self.fields['editors'].choices = [
+            (g.name, g.name) for g in Group.objects.all()]
+        
+    
+    
+                                   
 class EditType(DynamoForm):
     name = forms.CharField(widget=forms.HiddenInput)
     title = forms.CharField(label="Title")

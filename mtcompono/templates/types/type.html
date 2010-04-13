@@ -18,7 +18,7 @@
     <li><a href="#template">Templates</a></li>
   </ul>
   
-  <form id="fedit" action="." method="post" accept-charset="utf-8">
+  <form id="fedit" action="." method="post">
     {% csrf_token %}
     <section id="settings">
       
@@ -86,7 +86,7 @@
 	  $(function() {
 	      new $.compono.createType({
 	          path: "{% mtcompono_media_url %}/js/",
-	          medi_path: "{% mtcompono_media_url %}",
+	          media_path: "{% mtcompono_media_url %}",
 	          properties: ["text", "textarea", "datetime"],
 	          doc: JSON.parse('{{ doc|safe|escapejs }}')
 	      });

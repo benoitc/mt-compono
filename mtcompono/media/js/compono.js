@@ -157,6 +157,18 @@ String.prototype.startsWith = function(str) {
           $(el).ckeditor(config);
         },
         
+        code_editor: function(el, options) {
+          var element = el.element;
+          
+          self.cde = new CodeMirror.fromTextArea(el,  {
+            parserfile: "parsexml.js",
+            stylesheet: options.media_path  +"/css/xmlcolors.css",
+            path: options.media_path + "/js/codemirror/",
+            height: options.height
+          });
+          
+        },
+        
         load: function(path, callback) {
           var tpl = $.compono.storage.get(path);
           if (!tpl) {

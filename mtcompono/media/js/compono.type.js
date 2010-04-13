@@ -152,8 +152,8 @@
       
       self.cde = new CodeMirror.fromTextArea("tpl",  {
         parserfile: "parsexml.js",
-        stylesheet: options.medi_path  +"/css/xmlcolors.css",
-        path: options.medi_path + "/js/codemirror/",
+        stylesheet: options.media_path  +"/css/xmlcolors.css",
+        path: options.media_path + "/js/codemirror/",
         height: "450px"
       });      
       

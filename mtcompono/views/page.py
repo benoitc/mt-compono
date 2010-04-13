@@ -10,36 +10,37 @@ import urllib
 
 from django.conf import settings
 from django.contrib.auth.models import Group
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
 from django.core.urlresolvers import reverse
 
-from mtcompono.forms import CreatePageType, EditType
-from mtcompono.models import Page
+from mtcompono.forms import CreatePageType, EditType, EditContext
+from mtcompono.models import Page, ContextPage
 from mtcompono.permissions import can_create, can_edit
 
 
 from mtcompono.models import Page, Type
+from mtcompono.util import render_template
 
 
 def page_handler(request, path=None):
     """ main page handler """
-    print "path '%s'" % path
-    if path.endswith('/'): path = path[:-1]
+    if path == "/" or not path:
+        path = "/"
+    elif path.endswith('/'): 
+        path = path[:-1]
+        
     page = Page.from_path(path)
     if page is None:
         if can_create(request.user):
             return create_page(request, path)
         raise Http404
         
-    if request.GET.get('edit') and can_edit(request.user, page):
+    elif request.REQUEST.get('edit') and can_edit(request.user, page):
         return edit_page(request, page)
-    elif page.need_edit:
-        if can_edit(request.user, page):
-            return edit_page(request, page)
-        else:
-            raise Http404
+    elif request.POST and can_edit(request.user, page):
+        return edit_page(request, page)
     elif page.draft:
         if request.user.is_authenticated():
             return show_page(request, page)
@@ -49,17 +50,29 @@ def page_handler(request, path=None):
         return show_page(request, page)
     
 def create_page(request, path):
-    print "path '%s'" % path
     if request.method == "POST":
         fcreate = CreatePageType(request.POST)
         if fcreate.is_valid():
             path = fcreate.cleaned_data['path']
-            if path.endswith('/'): path = path[:-1]
-            redirect_path = "%s?r=%s" % (reverse("edit_type"), path)
+            if path != "/" and path.endswith('/'):
+                # shouldn't happen but who knows 
+                path = path[:-1]
+                
+            action = fcreate.cleaned_data['page_type']
+            if action == "type":
+                redirect_path = "%s?r=%s" % (reverse("edit_type"), path)
+                return HttpResponseRedirect(redirect_path)
+            elif action == "context":
+                page = ContextPage(urls=[path], author=request.user.username)
+                page.save()
+                return edit_context(request, page)
+            elif action != "--":
+                page = Page(ctype=action, urls=[path], author=request.username)
+                page.save()
+                
+                return edit_page(request, page)
 
-            return HttpResponseRedirect(redirect_path)
-    else:
-        fcreate = CreatePageType(initial=dict(path=path))
+    fcreate = CreatePageType(initial=dict(path=path))
     
     return render_to_response("pages/create_page.html", {
         "path": request.path,
@@ -67,31 +80,43 @@ def create_page(request, path):
     }, context_instance=RequestContext(request))
     
 def edit_page(request, page):
+    print "oco"
+    print page.doc_type
     if page.doc_type == "page":
         return edit_cnt(request, page)
     else:
-        return edit_ctx(request, page)
+        return edit_context(request, page)
         
 def edit_cnt(request, page):
     raise Http404()
 
-def edit_ctx(requuest, page):
-    ctx = CtxPage.from_page(page)
+def edit_context(request, page):
     if request.method == "POST":
         fctx = EditContext(request.POST)
         if fctx.is_valid():
-            ctx.template = fctx.cleaned_data['template']
-            ctx.save()
+            page.body = fctx.cleaned_data['body']
+            page.save()
+            return HttpResponseRedirect(request.path)
     else:
         
-        fctx = EditContext(initial={'template': ctx.template })
+        fctx = EditContext()
 
-    return render_to_response("pages/edit_context.html", {
-        
+    return render_to_response("pages/context.html", {
+        "f": fctx
     }, context_instance=RequestContext(request))
 
 
 def show_page(request, page):
-    return render_to_response("pages/create_page.html", {
-        "path": request.path
-    }, context_instance=RequestContext(request))
+    if page.doc_type == "context":
+        content = render_template(page.body,
+                        context_instance=RequestContext(request))
+        return HttpResponse(content)
+    else:
+        try:
+            t = Type.get(page.ctype)
+        except ResourceNotFound:
+            raise Http404()
+        content = render_template(t.templates['show'],
+                        context_instance=RequestContext(request))
+        return HttpResponse(content)
+    raise Http404()

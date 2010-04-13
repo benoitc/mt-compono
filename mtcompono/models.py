@@ -40,6 +40,7 @@ class DocRev(Document):
                         
 class Type(DocRev):
     name = StringProperty()
+    editors = StringListProperty()
     props = ListProperty()
     templates = DictProperty()
     
@@ -62,29 +63,13 @@ class Type(DocRev):
         return False
 
 class Page(DocRev):
-    name = StringProperty()
     title = StringProperty()
-    body = StringProperty()
-    templates = DictProperty()
-    
-    groups = StringListProperty()
-    ctype = StringProperty()
     urls = StringListProperty()
-    need_edit = BooleanProperty(default=True)
     draft = BooleanProperty(default=False)
+    author = StringProperty()
     
-    doc_type = "ctype"
+    doc_type = "page"
     
-    @classmethod
-    def all(cls):
-        return cls.view('mtcompono/all_types', include_docs=True)
-        
-    @classmethod
-    def by_name(cls, tname):
-        res = cls.view('mtcompono/ctypes_by_name', key=tname, 
-                    include_docs=True).first()
-        return res
-        
     @classmethod    
     def from_path(cls, path):
         key = path.split('/')
@@ -98,33 +83,16 @@ class Page(DocRev):
         obj = cls()
         obj._doc = page_instance._doc.copy()
         return obj
-
         
-class CntPage(Page):
-    """ a content page """
-        
-    doc_type = "page"       
-
     @classmethod
     def by_type(cls, tname):
         return cls.view("mtcompono/page_by_ctype", key=tname, 
                     include_docs=True).first()
-                    
-    @classmethod
-    def from_path():
-        key = path.split('/')
-        res = cls.view("mtcompono/cnt_from_path", key=key, 
-                    include_docs=True).first()
-        return res
+
+        
+class ContextPage(Page):
+    """ a content page """
+    body = StringProperty(default="")
+    editors = StringProperty()
     
-class Context(Page):
-    """ a context page """
-    
-    doc_type = "context"
-    
-    @classmethod
-    def from_path(cls, path):
-        key = path.split('/')
-        res = cls.view("mtcompono/ctx_from_path", key=key, 
-                    include_docs=True).first()
-        return res
+    doc_type = "context"       

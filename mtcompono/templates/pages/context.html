@@ -1,0 +1,82 @@
+{% extends "mtcompono/base.html" %}
+{% load i18n %}
+{% load mtcomponomedia %}
+
+
+
+{% block extrahead %}
+  <link rel="stylesheet" href="{% mtcompono_media_url %}/css/xmlcolors.css" type="text/css" media="screen, projection" />
+  <link rel="stylesheet" href="{% mtcompono_media_url %}/css/ui.multiselect.css" type="text/css" media="screen, projection" />
+{% endblock %}
+
+{% block content %}
+<h1>Edit Context page</h1>
+{% if f.errors %}
+    <div class="errors">
+        {{ f.errors }}
+    </div>
+{% endif %}
+<div id="tabs">
+    <ul>
+        <li><a href="#settings">Settings</a></li>
+        <li><a href="#content">Content (template)</a></li>
+    </ul>
+
+    <form action="." method="post" id="fedit">
+        {% csrf_token %}
+        
+        <section id="settings" class=".ui-widget .ui-widget-conten">
+        <h2>Settings</h2>
+        <ul>
+            <li><label for="title">{{ f.title.label }}</label>{{ f.title }}</li>
+            <li><label for="editors">{{ f.editors.label }}</label>{{ f.editors }}</li>
+        </ul>
+
+        <p><input type="submit" value="Continue &rarr;"></p>
+        </section>
+        
+        <section id="content" class=".ui-widget .ui-widget-conten">
+        <h2>Edit Body</h2>
+        
+        {{ f.body.label }}<br>
+        {{ f.body }}
+
+
+        <p><input type="submit" value="Continue &rarr;"></p>
+        </section>
+        
+    </form>
+
+{% endblock %}
+
+{% block extrascripts %}
+  <script>
+    var MTCOMPONO_MEDIA_URL = "{% mtcompono_media_url %}";
+  </script>
+    <script type="text/javascript" src="{% mtcompono_media_url %}/js/codemirror/codemirror.js"></script>
+	<script type="text/javascript" src="{% mtcompono_media_url %}/js/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="{% mtcompono_media_url %}/js/ckeditor/adapters/jquery.js"></script>
+	<script type="text/javascript" src="{% mtcompono_media_url %}/js/plugins/localisation/jquery.localisation-min.js"></script>
+    <script type="text/javascript" src="{% mtcompono_media_url %}/js/plugins/scrollTo/jquery.scrollTo-min.js"></script>
+    <script type="text/javascript" src="{% mtcompono_media_url %}/js/ui.multiselect.js"></script>
+
+    <script type="text/javascript" src="{% mtcompono_media_url %}/js/compono.js"></script>
+
+	
+	<script>
+	  
+	  $(function() {	      
+	      /*$.localise('ui-multiselect', {
+	          path:   '{% mtcompono_media_url %}/js/locale/'
+	      });*/
+		  $(".multiselect").multiselect();
+		   $("#tabs").tabs();
+		  $("input:submit").button();
+		  $.compono.code_editor("body", {
+		      media_path: "{% mtcompono_media_url %}",
+		      height: "350px",
+		  })
+    	});
+	</script>
+	
+{% endblock %}
