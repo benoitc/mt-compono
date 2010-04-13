@@ -61,6 +61,13 @@ And allow register the CouchDB database associated::
        ('mtcompono', "http://127.0.0.1:5984/yourdb"),
   )
 
+Add the fallback middleware. .This middleware process unkown urls and send them back to compono:
+
+  MIDDLEWARE_CLASSES = (
+      ...
+      'mtcompono.middleware.ComponoFallbackMiddleware',
+  )
+
 Then Edit your main `urls.py` file and add it to your pattern::
 
   urlpatterns = pattern('',

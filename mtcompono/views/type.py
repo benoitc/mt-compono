@@ -10,7 +10,8 @@ import urllib
 
 from django.conf import settings
 from django.contrib.auth.models import Group
-from django.http import Http404, HttpResponseRedirect, HttpResponse
+from django.http import Http404, HttpResponseRedirect, HttpResponse, \
+HttpResponseForbidden
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
 from django.core.urlresolvers import reverse
@@ -34,6 +35,9 @@ DEFAULT_TEMPLATE = os.path.join(os.path.dirname(__file__), '..', 'templates',
 def all_types(request):
     """ list all types """
     
+    if not can_create(request.user):
+        return HttpResponseForbidden()
+    
     types = Type.all()
     return render_to_response("types/types.html", {
         "types": types
@@ -41,6 +45,9 @@ def all_types(request):
     
 def edit_type(request, typeid=None):
     """ Edit a page type """
+    
+    if not can_create(request.user):
+        return HttpResponseForbidden()
     
     if request.POST:
         data = json.loads(request.raw_post_data)

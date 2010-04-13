@@ -25,6 +25,7 @@ from mtcompono.models import Page, Type
 
 def page_handler(request, path=None):
     """ main page handler """
+    print "path '%s'" % path
     if path.endswith('/'): path = path[:-1]
     page = Page.from_path(path)
     if page is None:
@@ -48,26 +49,14 @@ def page_handler(request, path=None):
         return show_page(request, page)
     
 def create_page(request, path):
+    print "path '%s'" % path
     if request.method == "POST":
         fcreate = CreatePageType(request.POST)
         if fcreate.is_valid():
             path = fcreate.cleaned_data['path']
             if path.endswith('/'): path = path[:-1]
-            pname = fcreate.cleaned_data['name']
-            p = Page({
-                "name": pname,
-                "urls": [path],
-                "editors": fcreate.cleaned_data['editors'],
-                "need_edit": True
-            })
-            p.save()
-            if  fcreate.cleaned_data['page_type'] == "type":
-                redirect_path = reverse('edit_type', kwargs=dict(name=pname,
-                                                        path=path))
+            redirect_path = "%s?r=%s" % (reverse("edit_type"), path)
 
-            else:
-                redirect_path = "%s?edit=1" % reverse('page_handler', 
-                                                    kwargs=dict(path=path))
             return HttpResponseRedirect(redirect_path)
     else:
         fcreate = CreatePageType(initial=dict(path=path))

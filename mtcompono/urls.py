@@ -31,6 +31,5 @@ urlpatterns = patterns('',
 
     
     (r'^%s/(?P<path>.*)$' % MTCOMPONO_MEDIA_URL, 'django.views.static.serve', 
-              {'document_root': MTCOMPONO_MEDIA_ROOT}),
-    unknown,
+              {'document_root': MTCOMPONO_MEDIA_ROOT})
 )

@@ -2,6 +2,7 @@
 
 {% block content %}
   <h2>All types</h2>
+  <a href="{% url edit_type %}">Create a new type</a>
   <ul>
   {% for t in types  %}
     <li>{{ t.name }} - <a href="{% url edit_type typeid=t.get_id %}">Edit</a></li>

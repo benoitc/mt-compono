@@ -12,7 +12,7 @@ except ImportError:
     from django.utils import simplejson as json
 
 from mtcompono.dynamo_form import DynamoForm, TemplateField
-from mtcompono.models import Page
+from mtcompono.models import Type, Page
 from mtcompono.widgets import TemplateWidget
 
 
@@ -24,19 +24,21 @@ FIELD_TYPES = {
 
                 
 class CreatePageType(forms.Form):
-    name = forms.CharField(label="type name")
     path = forms.CharField(widget=forms.HiddenInput)
-    page_type = forms.ChoiceField(choices=(
-                    ('type', 'Create a page type'),
-                    ('context', 'Create a context page')
-                ))
-    editors = forms.MultipleChoiceField(widget=forms.SelectMultiple(
-                                                        attrs={'size': 6}))
+    page_type = forms.ChoiceField()
     
     def __init__(self, *args, **kwargs):
         super(CreatePageType, self).__init__(*args, **kwargs)
-        self.fields['editors'].choices =  [(g.name, g.name) \
-                                                for g in Group.objects.all()]
+        choices = [
+                        ('type', 'Create from a new page type'),
+                        ('context', 'Create a context page'),
+                        ('--', '--'),
+                        ('--', 'Create from exisiting type:'),
+                        ('--', '--'),
+                    ]
+        choices += [(t._id, t.name) for t in Type.all()]
+        
+        self.fields['page_type'].choices =choices
                                       
 class EditType(DynamoForm):
     name = forms.CharField(widget=forms.HiddenInput)
