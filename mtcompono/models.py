@@ -93,6 +93,6 @@ class Page(DocRev):
 class ContextPage(Page):
     """ a content page """
     body = StringProperty(default="")
-    editors = StringProperty()
+    editors = StringListProperty()
     
     doc_type = "context"       

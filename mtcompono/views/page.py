@@ -95,11 +95,16 @@ def edit_context(request, page):
         fctx = EditContext(request.POST)
         if fctx.is_valid():
             page.body = fctx.cleaned_data['body']
+            page.editors = fctx.cleaned_data['editors']
+            page.title = fctx.cleaned_data['title']
             page.save()
             return HttpResponseRedirect(request.path)
     else:
-        
-        fctx = EditContext()
+        fctx = EditContext(initial={
+            "body": page.body,
+            "editors": page.editors,
+            "title": page.title
+        })
 
     return render_to_response("pages/context.html", {
         "f": fctx
