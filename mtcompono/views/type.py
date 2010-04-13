@@ -17,7 +17,6 @@ from django.template import RequestContext, loader, Context
 from django.core.urlresolvers import reverse
 
 
-from mtcompono.forms import EditType
 from mtcompono.permissions import can_create, can_edit
 
 from mtcompono.models import Type
@@ -51,6 +50,12 @@ def edit_type(request, typeid=None):
     
     if request.POST:
         data = json.loads(request.raw_post_data)
+
+        if not isinstance(data.get('editors'), list):
+            # maybe it should be handled at js level
+            # but we also want to make sur eit's a list
+            data['editors'] = [data['editors']]
+            
         old_t = Type.by_name(data['name'])
         
         if old_t and old_t._id != data.get("_id"):

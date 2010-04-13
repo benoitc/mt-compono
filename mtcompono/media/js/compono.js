@@ -197,6 +197,30 @@ String.prototype.startsWith = function(str) {
             }
         },
         
+        queryArgs: function(  ) {
+            var args = new Object();
+            var query = location.search.substring(1);     
+              // Get query string
+            var pairs = query.split(",");
+             // Break at comma
+            for(var i = 0; i < pairs.length; i++) {
+                var pos = pairs[i].indexOf('=');
+                  // Look for "name=value"
+                if (pos == -1) continue;
+                  // If not found, skip
+                var argname = pairs[i].substring(0,pos);
+                  // Extract the name
+                var value = pairs[i].substring(pos+1);
+                  // Extract the value
+                args[argname] = unescape(value);
+                 // Store as a property
+               // In JavaScript 1.5, use decodeURIComponent(  ) 
+               // instead of escape(  )
+            }
+            return args;     // Return the object
+        }
+        
+        
     });
     
 })(jQuery);

@@ -80,7 +80,8 @@
       var aproperties = [];
       var templates = {};
       var nb_properties = 0;
-      var properties = self._properties;
+      old_properties = self._properties;
+      var properties = {};
       
       $.each(aform, function() {
         var el = $(this);
@@ -108,7 +109,15 @@
         } else if (!name.startsWith("prop_") && !name.startsWith("csrf") &&
                   field_type != "submit" &&
                   (name != "templates") && (name != "tpl")) {
-          properties[name] = el.attr("value");
+          if (name in properties) {
+            if (typeof(properties[name]) != "object") {
+              properties[name] = [properties[name]];
+            }
+            properties[name].push(el.attr("value"));
+          } else{
+            properties[name] = el.attr("value");
+          }
+          
           if (self._id) properties['_id'] = self._id;
           if (self._rev) properties['_rev'] = self._rev;
         }
@@ -128,6 +137,10 @@
           data: JSON.stringify(properties),
           dataType: "json",
           success: function(data) {
+            var query = $.compono.queryArgs();
+            if (query.r) {
+              location.href = query.r + "?edit=1&type="+ data.id;
+            }
             self._id = data.id;
             self._rev = data.rev;
           }

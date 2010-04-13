@@ -18,7 +18,7 @@
     <li><a href="#template">Templates</a></li>
   </ul>
   
-  <form id="fedit" action="." method="post">
+  <form id="fedit" action="{% url edit_type doc.getid %}" method="post">
     {% csrf_token %}
     <section id="settings">
       
