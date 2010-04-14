@@ -22,7 +22,7 @@
         <li><a href="#content">Content (template)</a></li>
     </ul>
 
-    <form action="." method="post" id="fedit">
+    <form action="{{ path }}" method="post" id="fedit">
         {% csrf_token %}
         
         <section id="settings" class=".ui-widget .ui-widget-conten">

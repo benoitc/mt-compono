@@ -66,18 +66,18 @@ def create_page(request, path):
             elif action == "context":
                 page = ContextPage(urls=[path], author=request.user.username)
                 page.save()
-                return edit_context(request, page)
+                return edit_context(request, page, create=True)
             elif action != "--":
                 page = Page(ctype=action, urls=[path], 
                             author=request.user.username)
                 page.save()
                 
-                return edit_page(request, page)
+                return edit_page(request, page, create=True)
     elif request.GET.get('edit', '') and request.GET.get('type', ''):
         page = Page(ctype=request.GET.get('type'), urls=[path], 
                 author=request.user.username)
         page.save()
-        return edit_page(request, page)
+        return edit_page(request, page, create=True)
         
     fcreate = CreatePageType(initial=dict(path=path))
     
@@ -86,19 +86,19 @@ def create_page(request, path):
         "f": fcreate
     }, context_instance=RequestContext(request))
     
-def edit_page(request, page):
+def edit_page(request, page, create=False):
     if page.doc_type == "page":
-        return edit_content(request, page)
+        return edit_content(request, page, create=create)
     else:
-        return edit_context(request, page)
+        return edit_context(request, page, create=create)
         
-def edit_content(request, page):
+def edit_content(request, page, create=False):
     try:
         t = Type.get(page.ctype)
     except ResourceNotFound:
         raise Http404()
     
-    if request.POST:
+    if request.POST and not create:
         f = EditContent(request.POST, type_instance=t, document_instance=page)
         if f.is_valid():
             f.save()
@@ -110,8 +110,8 @@ def edit_content(request, page):
         "path": request.path
     }, context_instance=RequestContext(request))
 
-def edit_context(request, page):
-    if request.method == "POST":
+def edit_context(request, page, create=False):
+    if request.method == "POST" and not create:
         fctx = EditContext(request.POST)
         if fctx.is_valid():
             page.body = fctx.cleaned_data['body']
@@ -127,7 +127,8 @@ def edit_context(request, page):
         })
 
     return render_to_response("pages/context.html", {
-        "f": fctx
+        "f": fctx,
+        "path": request.path
     }, context_instance=RequestContext(request))
 
 

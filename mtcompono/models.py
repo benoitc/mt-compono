@@ -61,6 +61,10 @@ class Type(DocRev):
         if cls.by_name(name):
             return True
         return False
+        
+    def get_items(self):
+        return list(self.view("mtcompono/page_by_ctype", key=self._id, 
+                    include_docs=True))
 
 class Page(DocRev):
     title = StringProperty()

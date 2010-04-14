@@ -33,7 +33,6 @@ DEFAULT_TEMPLATE = os.path.join(os.path.dirname(__file__), '..', 'templates',
 
 def all_types(request):
     """ list all types """
-    
     if not can_create(request.user):
         return HttpResponseForbidden()
     
@@ -44,7 +43,6 @@ def all_types(request):
     
 def edit_type(request, typeid=None):
     """ Edit a page type """
-    
     if not can_create(request.user):
         return HttpResponseForbidden()
     

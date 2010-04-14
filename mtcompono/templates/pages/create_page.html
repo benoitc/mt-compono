@@ -11,11 +11,11 @@
 	   {{ f.errors }}
 	  {% endif %}
 		
-		<form method="post" action="{{ f.path }}">
-		  {% csrf_token %}
+		<form method="post" action="{{ path }}">
+		   {% csrf_token %}
             {{ f.path }}
 			<fieldset>
-			  <legend>New page type/context</legen>
+			  <legend>New page type/context</legend>
 			  <p>You can now choose to create a new content or a context</p>
 			  <ul>
 			    <li>{{ f.page_type }}</li>
