@@ -89,10 +89,13 @@ class Page(DocRev):
         return obj
         
     @classmethod
-    def by_type(cls, tname):
-        return cls.view("mtcompono/page_by_ctype", key=tname, 
-                    include_docs=True).first()
+    def by_type(cls, tid):
+        return cls.view("mtcompono/page_by_ctype", key=tid, 
+                    include_docs=True)
 
+    @property
+    def get_url(self):
+        return self.urls[0]
         
 class ContextPage(Page):
     """ a content page """

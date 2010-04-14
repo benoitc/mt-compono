@@ -5,7 +5,7 @@
 
 from django.conf import Settings
 from django.template import Library, Node, Template, TemplateSyntaxError
-from mtcompono.models import Type
+from mtcompono.models import Page, Type
 
 register = Library()
 
@@ -21,8 +21,8 @@ class ListTypeNode(Node):
                 return "[%s don't exist]" % self.type_name
             else:
                 return ''
-            
-        items = t.get_items()
+                
+        items = Page.by_type(t._id)
         output = ''
         try:
             tpl = Template(t.templates['list'])

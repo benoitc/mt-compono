@@ -5,7 +5,8 @@
 
   var template_path = MTCOMPONO_MEDIA_URL + '/templates/';
   
-  var new_input = '<div class="custom"><input type="text" name="{{lname}}"'
+  var new_input = '<div class="custom"><input type="text" name="{{vname}}"'
+  +' id="{{vname}}" value="{{ pname }}"><input type="text" name="{{lname}}"'
   +' id="{{lname}}" value="{{ label }}">{{>tpl}}<a class="delete" href="#">'
   +'delete</a></p>';
   
@@ -40,6 +41,8 @@
         var h = Mustache.to_html(new_input, {
           lname: "lprop_" + fname,
           label: label,
+          vname: "vprop_" + fname,
+          pname: fname,
           tpl: {
             name: "prop_" + fname
           }
@@ -80,7 +83,6 @@
       var aproperties = [];
       var templates = {};
       var nb_properties = 0;
-      old_properties = self._properties;
       var properties = {};
       
       $.each(aform, function() {
@@ -89,14 +91,21 @@
         var field_type = el.attr('type');
         if (name.startsWith("lprop_")) {
           var fid = name.substr(6);
-          var type = fid.split("_")[0];            
-          var prop = self.available_properties[type];            
+          var type = fid.split("_")[0];
+          var pname = $('#vprop_' + fid).val();         
+          var prop = self.available_properties[type];
+          if (!prop) {
+            prop = self.available_properties[pname];
+          }
+          if (pname) {
+            fid = pname;
+          } 
+           
           if (!ojson[fid]) {
             nb_properties += 1;
             o = {
               "id": fid,
               "label": el.attr("value"),
-              "type": prop['propertyName'],
               "name": prop['name']
             }
             
@@ -209,6 +218,7 @@
           $.each(doc.props, function(idx, prop) {
             self.nb_fields += 1;
             self.add_widget(prop);
+            self.available_properties[prop.id] = prop;
           })
         }
         

@@ -59,9 +59,9 @@ class EditContext(forms.Form):
             
 
 EXTRA_PROPERTIES_MAPPING = {
-    'Text': (forms.CharField, None, None),
-    'LongText': (forms.CharField, forms.Textarea, {'class': 'txt'}),
-    'Date': (forms.CharField, forms.TextInput, {'class': 'date'})
+    'text': (forms.CharField, None, None),
+    'textarea': (forms.CharField, forms.Textarea, {'class': 'txt'}),
+    'datetime': (forms.CharField, forms.TextInput, {'class': 'date'})
 }
 
 
@@ -80,7 +80,7 @@ class EditContent(forms.Form):
         self.document_instance = document_instance
         if type_instance is not None and hasattr(type_instance, 'props'):
             for prop in type_instance.props:
-                f, w, a = EXTRA_PROPERTIES_MAPPING[prop['type']]
+                f, w, a = EXTRA_PROPERTIES_MAPPING[prop['name']]
                 if not w:
                     field = f(label=prop['label'])
                 else:
