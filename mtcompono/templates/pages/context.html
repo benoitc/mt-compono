@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<h1>Edit Context page</h1>
+<h1>{% trans "Éditer un contexte" %}</h1>
 {% if f.errors %}
     <div class="errors">
         {{ f.errors }}
@@ -18,15 +18,15 @@
 {% endif %}
 <div id="tabs">
     <ul>
-        <li><a href="#settings">Settings</a></li>
-        <li><a href="#content">Content (template)</a></li>
+        <li><a href="#settings">{% trans "Paramètres" %}</a></li>
+        <li><a href="#content">{% trans "Contenu (template)" %}</a></li>
     </ul>
 
     <form action="{{ path }}" method="post" id="fedit">
         {% csrf_token %}
         
         <section id="settings" class=".ui-widget .ui-widget-conten">
-        <h2>Settings</h2>
+        <h2>{% trans "Paramètres" %}</h2>
         <ul>
             <li><label for="title">{{ f.title.label }}</label>{{ f.title }}</li>
             <li><label for="editors">{{ f.editors.label }}</label>{{ f.editors }}</li>
@@ -36,13 +36,13 @@
         </section>
         
         <section id="content" class=".ui-widget .ui-widget-conten">
-        <h2>Edit Body</h2>
+        <h2>{% trans "Éditer le contenu" %}</h2>
         
         {{ f.body.label }}<br>
         {{ f.body }}
 
 
-        <p><input type="submit" value="Continue &rarr;"></p>
+        <p><input type="submit" value="{% trans "Continuer &rarr;" %}"></p>
         </section>
         
     </form>

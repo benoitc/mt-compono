@@ -4,7 +4,7 @@
 
 {% block content %}
 
-  <h1>Create a new context or new page</h1>
+  <h1>{% trans "Créer un nouveau contenu ou un contexte à cette url" %}</h1>
 	<section id="create">
 	  
 	  {% if f.errors %}
@@ -14,14 +14,10 @@
 		<form method="post" action="{{ path }}">
 		   {% csrf_token %}
             {{ f.path }}
-			<fieldset>
-			  <legend>New page type/context</legend>
-			  <p>You can now choose to create a new content or a context</p>
-			  <ul>
-			    <li>{{ f.page_type }}</li>
-			  </ul>
-			</fieldset>
-			<input type="submit" name="bsubmit" value="Continue">
+			 <h2>{% trans "Nouveau contenu ou contexte" %}</h2>
+			 {{ f.page_type }}
+
+			<input type="submit" name="bsubmit" value="{% trans "Continuer" %}">
 		</form>
 	</section>
 {% endblock %}

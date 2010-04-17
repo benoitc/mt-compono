@@ -18,7 +18,7 @@ class ListTypeNode(Node):
         t = Type.by_name(self.type_name)
         if not t:
             if settings.DEBUG:
-                return "[%s don't exist]" % self.type_name
+                return _("[%s n'existe pas]" % self.type_name)
             else:
                 return ''
                 
@@ -30,7 +30,7 @@ class ListTypeNode(Node):
             output = tpl.render(context)
         except TemplateSyntaxError, e:
             if settings.DEBUG:
-                return "[Included list had syntax error: %s]" % e
+                return _("[Erreurs de syntaxe: %s]" % e)
             else:
                 return ''
         return output
@@ -39,9 +39,8 @@ class ListTypeNode(Node):
 def list_type(parser, token):
     bits = token.contents.split()
     if len(bits) < 2:
-        raise TemplateSyntaxError("'list_type' tag takes one argument: the type"
-                                  " name to list")
-                                  
+        raise TemplateSyntaxError(_("'list_type' tag nécessite au moins un"
+                                    " argument: le nom du type"))                                  
     return ListTypeNode(bits[1])
 list_type = register.tag(list_type)
     

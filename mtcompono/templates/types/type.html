@@ -10,56 +10,56 @@
 {% endblock %}
 
 {% block content %}
-<h1>Edit type</h1>
+<h1>{% trans "Éditer un type de contenu" %}</h1>
 <div id="tabs">
   <ul>
-    <li><a href="#settings">Settings</a></li>
-    <li><a href="#defineProperties">Define type properties</a></li>
-    <li><a href="#template">Templates</a></li>
+    <li><a href="#settings">{% trans "Paramètres" %}</a></li>
+    <li><a href="#defineProperties">{% trans "Définir les propriétés" %}</a></li>
+    <li><a href="#template">{% trans "Rendu" %}</a></li>
   </ul>
   
   <form id="fedit" action="{% url edit_type doc.getid %}" method="post">
     {% csrf_token %}
     <section id="settings">
       
-        <h2>Edit type settings</h2>
-         <p><label for="name">Name of type: </label><input type="text" name="name" id="name" value=""></p>
-         <p><label for="editors">Associate groups of editors to this page:</label><br><select id="editors" name="editors" size="5" multiple="multiple" class="multiselect">
+        <h2>{% trans "Éditer les paramètres du type" %}</h2>
+         <p><label for="name">{% trans "Nom du type :" %} </label><input type="text" name="name" id="name" value=""></p>
+         <p><label for="editors">{% trans "Associer des groupes d'éditeurs à cette page :" %}</label><br><select id="editors" name="editors" size="5" multiple="multiple" class="multiselect">
          {% for e in editors %}
-            <option name="{{ e.name }}">{{ e.name }}</option>
+            <option name="{{ e.name }}"{% ifequal e.name "administrateurs" %} selected="selected"{% endifequal%}>{{ e.name }}</option>
          {% endfor %}
         </select></p>
       
-        <p><input class="submit" type="submit" value="Save"></p>
+        <p><input class="submit" type="submit" value="{% trans "Enregistrer" %}"></p>
     </section>
     
     <section id="defineProperties">
         <aside id="tools">
-          <h2>FieldsTypes:</h2>
+          <h2>{% trans "Types de propriétés :" %}</h2>
           <ul id="fieldsTypes"></ul>
         </aside>
          
          <div id="cedit">
-             <h2>Define type properties</h2>
+             <h2>{% trans "Définir les propriétés" %}</h2>
              <div id="properties"></div>
         </div>
-        <p><input class="submit" type="submit" value="Save"></p>
+        <p><input class="submit" type="submit" value="{% trans "Enregistrer" %}"></p>
     </section>
 
     <section id="template">
-      <h2>Edit the templates</h2>
+      <h2>{% trans "Éditer les modèles HTML" %}</h2>
       
       <select id="templates" name="templates">
-          <option value="-">Choose an existing template to edit</option>
-          <option value="show" selected="selected">Show</option>
-          <option value="list">List</option>
+          <option value="-">{% trans "Choisir un modèle à éditer" %}</option>
+          <option value="show" selected="selected">{% trans "Contenu (show)" %}</option>
+          <option value="list">{% trans "Liste (list)" %}</option>
       </select>
       
       <textarea name="tpl" id="tpl"></textarea>
       <input type="hidden" name="tpl_show" id="tpl_show" value="">
       <input type="hidden" name="tpl_list" id="tpl_list" value="">
       
-      <p><input class="submit" type="submit" value="Save"><input class="submit" type="submit" value="Empty current template" id="bempty"></p>
+      <p><input class="submit" type="submit" value="{% trans "Enregistrer" %}"><input class="submit" type="submit" value="{% trans "Réinitialiser le modèle en cours" %}" id="bempty"></p>
     </section>
   </form>
   

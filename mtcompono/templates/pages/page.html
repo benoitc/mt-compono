@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<h1>Edit a content</h1>
+<h1>{% trans "Éditer un contenu" %}</h1>
 {% if f.errors %}
     <div class="errors">
         {{ f.errors }}
@@ -18,19 +18,19 @@
 {% endif %}
 <div id="tabs">
     <ul>
-        <li><a href="#contrny">Content</a></li>
+        <li><a href="#contrny">{% trans "Contenu" %}</a></li>
     </ul>
 
     <form action="{{ path }}" method="post" id="fedit">
         {% csrf_token %}
         <section id="content" class=".ui-widget .ui-widget-conten">
-        <h2>Edit Page content</h2>
+        <h2>{% trans "Éditer le conteu" %}</h2>
         
         <ul>
             {{ f.as_ul }}
         </ul>
 
-        <p><input type="submit" value="Continue &rarr;"></p>
+        <p><input type="submit" value="{% trans "Continuer &rarr;" %}"></p>
         </section>
         
     </form>
@@ -63,7 +63,8 @@
 		  $.compono.code_editor("body", {
 		      media_path: "{% mtcompono_media_url %}",
 		      height: "350px",
-		  })
+		  });
+		  $(".date", inp).datepicker();
     	});
 	</script>
 	

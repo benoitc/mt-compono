@@ -7,6 +7,7 @@ from django.contrib.auth.models import Group
 from django import forms
 from django.forms.util import ValidationError, ErrorList
 from django.utils.datastructures import SortedDict
+from django.utils.translation import ugettext as _
 
 try:
     import simplejson as json
@@ -31,10 +32,10 @@ class CreatePageType(forms.Form):
     def __init__(self, *args, **kwargs):
         super(CreatePageType, self).__init__(*args, **kwargs)
         choices = [
-                        ('type', 'Create from a new page type'),
-                        ('context', 'Create a context page'),
+                        ('type', _(u"Créer une page et un nouveau type")),
+                        ('context', _(u'Créer un contexte')),
                         ('--', '--'),
-                        ('--', 'Create from exisiting type:'),
+                        ('--', _(u'Créer une page à partir du type :')),
                         ('--', '--'),
                     ]
         choices += [(t._id, t.name) for t in Type.all()]
@@ -47,8 +48,8 @@ class EditContext(forms.Form):
                                                 attrs={'cols':80, 'rows':5,
                                                         'id': "body"}))
     editors = forms.MultipleChoiceField(
-        label="Associate groups of editors to this page:",
-        widget=forms.SelectMultiple(attrs={'size': 5, 'class': "multiselect"})
+        label=_(u"Associer des groupes d'éditeurs à cette page :"),
+        widget=forms.SelectMultiple(attrs={'size': 5, 'class': "multiselect"}),
     )
     
     def __init__(self, *args, **kwargs):
