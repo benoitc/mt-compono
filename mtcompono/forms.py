@@ -81,6 +81,7 @@ class EditContent(forms.Form):
         self.type_instance = type_instance
         self.document_instance = document_instance
         if type_instance is not None and hasattr(type_instance, 'props'):
+           
             for prop in type_instance.props:
                 f, w, a = EXTRA_PROPERTIES_MAPPING[prop['name']]
                 if not w:
@@ -96,7 +97,9 @@ class EditContent(forms.Form):
                                                 prop['id'])
                     except AttributeError:
                         continue
-                        
+    
+        if document_instance is not None:
+             object_data['title'] = document_instance.title 
         object_data.update(initial)
         
         super(EditContent, self).__init__(data=data, files=files, 
