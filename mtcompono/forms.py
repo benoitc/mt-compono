@@ -14,6 +14,8 @@ try:
 except ImportError:
     from django.utils import simplejson as json
 
+from couchdbkit.ext.django.loading import get_db
+
 from mtcompono.models import Type, Page
 
 
@@ -115,4 +117,14 @@ class EditContent(forms.Form):
         self.document_instance.save()
         return self.document_instance
                        
+class CreateDocument(forms.Form):
+    ptype = forms.ChoiceField(label=_("Type de document :"))
     
+    def __init__(self, *args, **kwargs):
+        super(CreateDocument, self).__init__(*args, **kwargs)
+        choices = [(t._id, t.name) for t in Type.all()]
+        
+        self.fields['ptype'].choices = choices
+
+            
+        

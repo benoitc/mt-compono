@@ -15,7 +15,8 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
 from django.core.urlresolvers import reverse
 
-from mtcompono.forms import CreatePageType, EditContent, EditContext
+from mtcompono.forms import CreatePageType, EditContent, EditContext, \
+CreateDocument
 from mtcompono.models import Page, ContextPage
 from mtcompono.permissions import can_create, can_edit
 
@@ -24,6 +25,7 @@ from mtcompono.models import Page, Type
 from mtcompono.util import render_template
 
 from couchdbkit import ResourceNotFound
+from couchdbkit.ext.django.loading import get_db
 
 def page_handler(request, path=None):
     """ main page handler """
@@ -147,3 +149,28 @@ def show_page(request, page):
         }, context_instance=RequestContext(request))
         return HttpResponse(content)
     raise Http404()
+    
+    
+def new_document(request):
+    if request.POST:
+        fcreate = CreateDocument(request.POST)
+        if fcreate.is_valid():
+            ptype = fcreate.cleaned_data['ptype']
+            
+            t = Type.get(ptype)
+            db = get_db("mtcompono")
+            uuid = db.server.next_uuid()
+            
+            path = "/%s/%s" % (t.name, uuid)
+            page = Page(ctype=ptype, urls=[path], 
+                        author=request.user.username)
+            page.save()
+            redirect_path = "%s?edit=1" % path
+            return HttpResponseRedirect(redirect_path)
+    else:
+        fcreate = CreateDocument()
+        
+    return render_to_response("pages/create_document.html", {
+        "f": fcreate
+    }, context_instance=RequestContext(request))
+    

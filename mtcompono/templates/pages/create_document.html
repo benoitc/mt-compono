@@ -1,0 +1,23 @@
+{% extends "mtcompono/base.html" %}
+{% load i18n %}
+{% load mtcomponomedia %}
+
+{% block content %}
+
+  <h1>{% trans "Créer un nouveau document" %}</h1>
+	<section id="create">
+	  
+	  {% if f.errors %}
+	   {{ f.errors }}
+	  {% endif %}
+		
+		<form method="post" action="{{ path }}">
+		   {% csrf_token %}
+			 <h2>{% trans "Nouveau document" %}</h2>
+			 {{ f.as_p }}
+
+			<input type="submit" name="bsubmit" value="{% trans "Continuer" %}">
+		</form>
+	</section>
+{% endblock %}
+
