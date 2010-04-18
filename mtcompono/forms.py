@@ -15,7 +15,6 @@ except ImportError:
     from django.utils import simplejson as json
 
 from mtcompono.models import Type, Page
-from mtcompono.widgets import TemplateWidget
 
 
 FIELD_TYPES = {
@@ -43,8 +42,8 @@ class CreatePageType(forms.Form):
         self.fields['page_type'].choices =choices
         
 class EditContext(forms.Form):
-    title = forms.CharField(max_length=255)
-    body = forms.CharField(label="Body", widget=forms.Textarea(
+    title = forms.CharField(label=_("Titre"), max_length=255)
+    body = forms.CharField(label=_("Corps du texte"), widget=forms.Textarea(
                                                 attrs={'cols':80, 'rows':5,
                                                         'id': "body"}))
     editors = forms.MultipleChoiceField(
