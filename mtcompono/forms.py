@@ -64,7 +64,8 @@ class EditContext(forms.Form):
 EXTRA_PROPERTIES_MAPPING = {
     'text': (forms.CharField, None, None),
     'textarea': (forms.CharField, forms.Textarea, {'class': 'txt'}),
-    'datetime': (forms.CharField, forms.TextInput, {'class': 'date'})
+    'datetime': (forms.CharField, forms.TextInput, {'class': 'date'}),
+    'urlfield': (forms.CharField, None, None)
 }
 
 
