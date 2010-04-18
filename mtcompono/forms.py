@@ -22,7 +22,8 @@ from mtcompono.models import Type, Page
 FIELD_TYPES = {
     "Text": (forms.CharField,),
     "LongText": (forms.CharField, forms.Textarea,),
-    "Date": (forms.CharField,)
+    "Date": (forms.CharField,),
+    "URLField": (forms.CharField,)
 }
 
                 
