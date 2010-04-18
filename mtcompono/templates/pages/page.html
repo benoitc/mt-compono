@@ -60,10 +60,8 @@
 		  $(".multiselect").multiselect();
 		   $("#tabs").tabs();
 		  $("input:submit").button();
-		  $.compono.code_editor("body", {
-		      media_path: "{% mtcompono_media_url %}",
-		      height: "350px",
-		  });
+		   $.compono.editor(".txt")
+		 
 		  $(".date", inp).datepicker();
     	});
 	</script>
