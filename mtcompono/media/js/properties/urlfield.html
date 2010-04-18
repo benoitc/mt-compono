@@ -1,0 +1,24 @@
+<input type="text" name="{{ name }}" id="{{ name }}"> <a href="#" onclick="UpMan.open('{{ name }}', '/upload')">choisir</a>
+<script>
+var UpMan = {
+  activeInput: null,
+  dialog: null,
+  open: function(inputName, url) {
+    this.activeInput = $(inputName)[0];
+    this.dialog = $('<div id="URLFileDialog"></div>').html('<iframe name="URLFileFrame" id="URLFileFrame" width="100%" height="100%" marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto" src="'+ url +'"></iframe>');
+    $('body').append(this.dialog);
+    this.dialog.dialog({ width: 800, height: 600, modal: true, title: 'Gestionnaire de fichiers'
+    });
+    return false;
+  }, // open
+  update: function(value) {
+    this.activeInput.value = value;
+    this.dialog.remove();
+    return false;
+  }, // update
+  buttons: function(definition) {
+    this.dialog.dialog({buttons: definition});
+  }
+};
+</script>
+

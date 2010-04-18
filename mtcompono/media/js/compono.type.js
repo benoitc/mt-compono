@@ -253,7 +253,6 @@
     init(options);
   }
   
-  
   $.compono = $.compono || {};
   $.extend($.compono, {
     createType: Type
