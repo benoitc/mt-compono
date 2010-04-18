@@ -20,10 +20,10 @@ from mtcompono.models import Type, Page
 
 
 FIELD_TYPES = {
-    "Text": (forms.CharField,),
-    "LongText": (forms.CharField, forms.Textarea,),
-    "Date": (forms.CharField,),
-    "URLField": (forms.CharField,)
+    "text": (forms.CharField,),
+    "textarea": (forms.CharField, forms.Textarea,),
+    "datetime": (forms.CharField,),
+    "urlfield": (forms.CharField,)
 }
 
                 
