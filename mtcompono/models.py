@@ -21,15 +21,12 @@ class DocRev(Document):
     updated = DateTimeProperty()
     
     def save(self, **params):
-        print self.properties()
         self.created = datetime.utcnow()
         
         if not self._rev:
             self.created = datetime.utcnow()
-        print "mmmm"
         self.updated = datetime.utcnow()
         
-        print "la"
         super(DocRev, self).save(**params)
         
         # add a revision

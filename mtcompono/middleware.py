@@ -10,7 +10,7 @@ from django.conf import settings
 class ComponoFallbackMiddleware(object):
     def process_response(self, request, response):
         if response.status_code != 404:
-            return response # No need to check for a flatpage for non-404 responses.
+            return response # No need to check for a page for non-404 responses.
         try:
             return page_handler(request, request.path_info)
         # Return the original response if any errors happened. Because this
